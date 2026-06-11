@@ -11,6 +11,9 @@ struct SettingsView: View {
 
   var body: some View {
     Form {
+      if server.isRunning {
+          Label("Stop the server to change settings.", systemImage: "exclamationmark.triangle")
+      }
       HStack {
         let userHome: String = FileManager.default.homeDirectoryForCurrentUser.relativePath
         TextField(".CIA folder:", text: $rootFolder, prompt: Text(userHome))
@@ -32,7 +35,11 @@ struct SettingsView: View {
         )
         Spacer().padding(.horizontal)
       }
-      Toggle("Automatically open page after server starts", isOn: $openPage).focusable()
-    }.padding().disabled(server.isRunning)
+      Toggle("Automatically open page after server starts", isOn: $openPage).toggleStyle(.automatic)
+    }.padding().disabled(server.isRunning).frame(minWidth: 400, maxWidth: 600)
   }
+}
+
+#Preview {
+    SettingsView()
 }
