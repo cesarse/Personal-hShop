@@ -38,6 +38,9 @@ class Webserver: ObservableObject {
     try server.start(UInt16(port))
     print("server started")
     isRunning = true
+    if openPage, let url = URL(string: "http://localhost:\(port)") {
+      NSWorkspace.shared.open(url)
+    }
   }
 
   func stop() {
