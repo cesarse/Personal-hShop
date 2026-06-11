@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		FE31C6472BE545380069F1A7 /* Webserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE31C6462BE545380069F1A7 /* Webserver.swift */; };
-		FE31C64C2BE55D3E0069F1A7 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE31C64B2BE55D3E0069F1A7 /* Swifter */; };
-		FE5A0F682BDDC083000AD399 /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = FE5A0F672BDDC083000AD399 /* SwiftFormat */; };
-		FE5A0F6A2BDDC083000AD399 /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = FE5A0F692BDDC083000AD399 /* SwiftFormatConfiguration */; };
 		FE608F192BD9784F0056B110 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE608F182BD9784F0056B110 /* Application.swift */; };
 		FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE608F1A2BD9784F0056B110 /* SettingsView.swift */; };
 		FE608F1D2BD978500056B110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE608F1C2BD978500056B110 /* Assets.xcassets */; };
@@ -32,9 +29,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE31C64C2BE55D3E0069F1A7 /* Swifter in Frameworks */,
-				FE5A0F6A2BDDC083000AD399 /* SwiftFormatConfiguration in Frameworks */,
-				FE5A0F682BDDC083000AD399 /* SwiftFormat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,9 +89,6 @@
 			);
 			name = "Personal hShop";
 			packageProductDependencies = (
-				FE5A0F672BDDC083000AD399 /* SwiftFormat */,
-				FE5A0F692BDDC083000AD399 /* SwiftFormatConfiguration */,
-				FE31C64B2BE55D3E0069F1A7 /* Swifter */,
 			);
 			productName = "Personal hShop";
 			productReference = FE608F152BD9784F0056B110 /* Personal hShop.app */;
@@ -128,8 +119,6 @@
 			);
 			mainGroup = FE608F0C2BD9784F0056B110;
 			packageReferences = (
-				FE5A0F662BDDC083000AD399 /* XCRemoteSwiftPackageReference "swift-format" */,
-				FE31C64A2BE55D3E0069F1A7 /* XCRemoteSwiftPackageReference "swifter" */,
 			);
 			productRefGroup = FE608F162BD9784F0056B110 /* Products */;
 			projectDirPath = "";
@@ -370,43 +359,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		FE31C64A2BE55D3E0069F1A7 /* XCRemoteSwiftPackageReference "swifter" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/httpswift/swifter.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
-			};
-		};
-		FE5A0F662BDDC083000AD399 /* XCRemoteSwiftPackageReference "swift-format" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-format";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 510.1.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		FE31C64B2BE55D3E0069F1A7 /* Swifter */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FE31C64A2BE55D3E0069F1A7 /* XCRemoteSwiftPackageReference "swifter" */;
-			productName = Swifter;
-		};
-		FE5A0F672BDDC083000AD399 /* SwiftFormat */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FE5A0F662BDDC083000AD399 /* XCRemoteSwiftPackageReference "swift-format" */;
-			productName = SwiftFormat;
-		};
-		FE5A0F692BDDC083000AD399 /* SwiftFormatConfiguration */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FE5A0F662BDDC083000AD399 /* XCRemoteSwiftPackageReference "swift-format" */;
-			productName = SwiftFormatConfiguration;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FE608F0D2BD9784F0056B110 /* Project object */;
 }
