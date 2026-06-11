@@ -10,33 +10,41 @@ struct SettingsView: View {
   @StateObject private var server = Webserver.instance
 
   var body: some View {
-    Form {
-      if server.isRunning {
-          Label("Stop the server to change settings.", systemImage: "exclamationmark.triangle")
-      }
-      HStack {
-        let userHome: String = FileManager.default.homeDirectoryForCurrentUser.relativePath
-        TextField(".CIA folder:", text: $rootFolder, prompt: Text(userHome))
-          .truncationMode( /*@START_MENU_TOKEN@*/.tail /*@END_MENU_TOKEN@*/).help(rootFolder)
-        Button(
-          action: { showChooseFolderDialog = true },
-          label: { Label("Choose folder...", systemImage: "folder") }
-        )
-        .fileImporter(
-          isPresented: $showChooseFolderDialog, allowedContentTypes: [.folder],
-          onCompletion: { result in
-            try! rootFolder = result.get().relativePath
+      Form {
+          if server.isRunning {
+              HStack {
+                  Label("Stop the server to change settings.", systemImage: "exclamationmark.triangle").symbolRenderingMode(.multicolor)
+                  Button(
+                    action: { server.stop() },
+                    label: { Label("Stop", systemImage: "stop.circle").symbolRenderingMode(.multicolor) }
+                  )
+              }
           }
-        )
-      }
-      HStack {
-        TextField(
-          "Server port:", value: $port, format: .number.grouping(.never), prompt: Text("1234")
-        )
-        Spacer().padding(.horizontal)
-      }
-      Toggle("Automatically open page after server starts", isOn: $openPage).toggleStyle(.automatic)
-    }.padding().disabled(server.isRunning).frame(minWidth: 400, maxWidth: 600)
+          Section {
+              HStack {
+                  let userHome: String = FileManager.default.homeDirectoryForCurrentUser.relativePath
+                  TextField(".CIA folder:", text: $rootFolder, prompt: Text(userHome))
+                      .truncationMode( /*@START_MENU_TOKEN@*/.tail /*@END_MENU_TOKEN@*/).help(rootFolder)
+                  Button(
+                    action: { showChooseFolderDialog = true },
+                    label: { Label("Choose folder...", systemImage: "folder") }
+                  )
+                  .fileImporter(
+                    isPresented: $showChooseFolderDialog, allowedContentTypes: [.folder],
+                    onCompletion: { result in
+                        try! rootFolder = result.get().relativePath
+                    }
+                  )
+              }
+              HStack {
+                  TextField(
+                    "Server port:", value: $port, format: .number.grouping(.never), prompt: Text("1234")
+                  )
+                  Spacer().padding(.horizontal)
+              }
+              Toggle("Automatically open page after server starts", isOn: $openPage).toggleStyle(.automatic)
+          }.disabled(server.isRunning)
+      }.padding().frame(minWidth: 400, maxWidth: 600)
   }
 }
 
