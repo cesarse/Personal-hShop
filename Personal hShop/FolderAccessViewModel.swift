@@ -23,7 +23,9 @@ final class FolderAccessViewModel: ObservableObject {
     }
 
     private func loadSavedFolder() {
-        folderPath = try? bookmarkStore.withSecurityScopedFolderAccess { $0.path }
+        folderPath = try? bookmarkStore.withSecurityScopedFolderAccess {
+            $0.path
+        }
     }
 
     private func saveSecurityScopedBookmark(for folderURL: URL) throws {
@@ -50,7 +52,8 @@ enum FolderAccessError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .couldNotStartSecurityScopedAccess:
-            return "The app could not start security-scoped access to the selected folder."
+            return
+                "The app could not start security-scoped access to the selected folder."
         }
     }
 }

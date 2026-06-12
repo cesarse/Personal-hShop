@@ -21,8 +21,10 @@ class Webserver: ObservableObject {
             body {
                 let ciaFiles: [String]
                 do {
-                    ciaFiles = try bookmarkStore.withSecurityScopedFolderAccess { folderURL in
-                        let allFiles = try FileManager.default.contentsOfDirectory(atPath: folderURL.path)
+                    ciaFiles = try bookmarkStore.withSecurityScopedFolderAccess
+                    { folderURL in
+                        let allFiles = try FileManager.default
+                            .contentsOfDirectory(atPath: folderURL.path)
                         return allFiles.filter { $0.hasSuffix(".cia") }
                     }
                 } catch {

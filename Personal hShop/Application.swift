@@ -3,28 +3,30 @@ import SwiftUI
 @main
 struct Application: App {
 
-  @StateObject private var server = Webserver.instance
+    @StateObject private var server = Webserver.instance
     @StateObject private var viewModel = FolderAccessViewModel.instance
 
-  var body: some Scene {
-    Settings {
-      SettingsView()
+    var body: some Scene {
+        Settings {
+            SettingsView()
+        }
+        .commands {
+            CommandGroup(replacing: CommandGroupPlacement.newItem) {
+                Button("Start server") {
+                    do {
+                        try server.start()
+                    } catch {
+                        let dlg = NSAlert(error: error)
+                        dlg.runModal()
+                    }
+                }.disabled(server.isRunning)
+                Button("Stop server") { server.stop() }.disabled(
+                    !server.isRunning
+                )
+            }
+            CommandGroup(replacing: CommandGroupPlacement.saveItem) {}
+            CommandGroup(replacing: CommandGroupPlacement.appVisibility) {}
+            CommandGroup(replacing: CommandGroupPlacement.systemServices) {}
+        }
     }
-    .commands {
-      CommandGroup(replacing: CommandGroupPlacement.newItem) {
-        Button("Start server") {
-          do {
-            try server.start()
-          } catch {
-            let dlg = NSAlert(error: error)
-            dlg.runModal()
-          }
-        }.disabled(server.isRunning)
-        Button("Stop server") { server.stop() }.disabled(!server.isRunning)
-      }
-      CommandGroup(replacing: CommandGroupPlacement.saveItem) {}
-      CommandGroup(replacing: CommandGroupPlacement.appVisibility) {}
-      CommandGroup(replacing: CommandGroupPlacement.systemServices) {}
-    }
-  }
 }

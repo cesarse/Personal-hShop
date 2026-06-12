@@ -35,7 +35,9 @@ final class BookmarkStore {
 
         if isStale {
             let refreshed = try folderURL.bookmarkData(
-                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                options: [
+                    .withSecurityScope, .securityScopeAllowOnlyReadAccess,
+                ],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
