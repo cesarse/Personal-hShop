@@ -12,6 +12,9 @@
 		FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE608F1A2BD9784F0056B110 /* SettingsView.swift */; };
 		FE608F1D2BD978500056B110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE608F1C2BD978500056B110 /* Assets.xcassets */; };
 		FE608F202BD978500056B110 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE608F1F2BD978500056B110 /* Preview Assets.xcassets */; };
+		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
+		FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */; };
+		FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E62FDCB335009ED82D /* BookmarkStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,8 @@
 		FE608F1C2BD978500056B110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FE608F1F2BD978500056B110 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FE608F212BD978500056B110 /* Personal_hShop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Personal_hShop.entitlements; sourceTree = "<group>"; };
+		FE7328E62FDCB335009ED82D /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
+		FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE6316632FDC030B009A248C /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +60,8 @@
 		FE608F172BD9784F0056B110 /* Personal hShop */ = {
 			isa = PBXGroup;
 			children = (
+				FE7328E62FDCB335009ED82D /* BookmarkStore.swift */,
+				FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */,
 				FE608F182BD9784F0056B110 /* Application.swift */,
 				FE608F1A2BD9784F0056B110 /* SettingsView.swift */,
 				FE31C6462BE545380069F1A7 /* Webserver.swift */,
@@ -89,6 +97,7 @@
 			);
 			name = "Personal hShop";
 			packageProductDependencies = (
+				FE6316622FDC030B009A248C /* Swifter */,
 			);
 			productName = "Personal hShop";
 			productReference = FE608F152BD9784F0056B110 /* Personal hShop.app */;
@@ -119,6 +128,7 @@
 			);
 			mainGroup = FE608F0C2BD9784F0056B110;
 			packageReferences = (
+				FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */,
 			);
 			productRefGroup = FE608F162BD9784F0056B110 /* Products */;
 			projectDirPath = "";
@@ -147,6 +157,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */,
+				FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */,
+				FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */,
 				FE608F192BD9784F0056B110 /* Application.swift in Sources */,
 				FE31C6472BE545380069F1A7 /* Webserver.swift in Sources */,
 			);
@@ -292,7 +304,18 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Personal hShop/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -321,7 +344,18 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Personal hShop/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -359,6 +393,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/httpswift/swifter.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FE6316622FDC030B009A248C /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FE608F0D2BD9784F0056B110 /* Project object */;
 }

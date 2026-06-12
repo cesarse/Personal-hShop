@@ -4,6 +4,7 @@ import SwiftUI
 struct Application: App {
 
   @StateObject private var server = Webserver.instance
+    @StateObject private var viewModel = FolderAccessViewModel.instance
 
   var body: some Scene {
     Settings {

@@ -2,12 +2,13 @@ import SwiftUI
 
 struct SettingsView: View {
 
-  @AppStorage("rootFolder") private var rootFolder: String = ""
   @AppStorage("port") private var port: Int = 1234
   @AppStorage("openPage") private var openPage: Bool = false
 
   @State private var showChooseFolderDialog: Bool = false
   @StateObject private var server = Webserver.instance
+    @StateObject private var viewModel = FolderAccessViewModel.instance
+
 
   var body: some View {
       Form {
@@ -22,19 +23,26 @@ struct SettingsView: View {
           }
           Section {
               HStack {
-                  let userHome: String = FileManager.default.homeDirectoryForCurrentUser.relativePath
-                  TextField(".CIA folder:", text: $rootFolder, prompt: Text(userHome))
-                      .truncationMode( /*@START_MENU_TOKEN@*/.tail /*@END_MENU_TOKEN@*/).help(rootFolder)
+                  TextField(
+                    ".CIA folder:",
+                    text: .constant(viewModel.folderPath ?? ""),
+                    prompt: Text("No folder selected")
+                  )
+                  .textFieldStyle(.plain)
+                  .disabled(true)
+                  .truncationMode(.tail)
+                  .help(viewModel.folderPath ?? "")
                   Button(
                     action: { showChooseFolderDialog = true },
                     label: { Label("Choose folder...", systemImage: "folder") }
                   )
                   .fileImporter(
                     isPresented: $showChooseFolderDialog, allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false,
                     onCompletion: { result in
-                        try! rootFolder = result.get().relativePath
-                    }
-                  )
+                        viewModel.handleFolderImport(result)
+                    })
+
               }
               HStack {
                   TextField(
