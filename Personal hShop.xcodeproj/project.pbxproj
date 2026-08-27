@@ -15,6 +15,7 @@
 		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
 		FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */; };
 		FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E62FDCB335009ED82D /* BookmarkStore.swift */; };
+		FE965CEF3040BA0F0011D477 /* CIAParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE965CEE3040BA0F0011D477 /* CIAParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		FE608F212BD978500056B110 /* Personal_hShop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Personal_hShop.entitlements; sourceTree = "<group>"; };
 		FE7328E62FDCB335009ED82D /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
 		FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessViewModel.swift; sourceTree = "<group>"; };
+		FE965CEE3040BA0F0011D477 /* CIAParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIAParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		FE608F172BD9784F0056B110 /* Personal hShop */ = {
 			isa = PBXGroup;
 			children = (
+				FE965CEE3040BA0F0011D477 /* CIAParser.swift */,
 				FE7328E62FDCB335009ED82D /* BookmarkStore.swift */,
 				FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */,
 				FE608F182BD9784F0056B110 /* Application.swift */,
@@ -158,6 +161,7 @@
 			files = (
 				FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */,
 				FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */,
+				FE965CEF3040BA0F0011D477 /* CIAParser.swift in Sources */,
 				FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */,
 				FE608F192BD9784F0056B110 /* Application.swift in Sources */,
 				FE31C6472BE545380069F1A7 /* Webserver.swift in Sources */,

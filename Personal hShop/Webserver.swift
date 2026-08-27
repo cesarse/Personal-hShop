@@ -29,6 +29,12 @@ class Webserver: ObservableObject {
     /// Reused across requests: building a `CIContext` is expensive.
     private static let ciContext = CIContext()
 
+    /// Titles read out of the CIA files, keyed by name, size and mtime.
+    /// Parsing scans a large part of each file, and the index page is
+    /// rendered afresh on every request, so the result has to be kept.
+    private var titleCache: [String: String] = [:]
+    private let titleCacheLock = NSLock()
+
     private enum DownloadError: Error {
         case unavailable
     }
@@ -36,7 +42,13 @@ class Webserver: ObservableObject {
     private init() {
     }
 
-    private func listCiaFiles() -> [String] {
+    /// A `.cia` in the shared folder, with the name to show for it.
+    private struct Game {
+        let fileName: String
+        let displayName: String
+    }
+
+    private func listGames() -> [Game] {
         do {
             return try bookmarkStore.withSecurityScopedFolderAccess {
                 folderURL in
@@ -48,6 +60,15 @@ class Webserver: ObservableObject {
                     .sorted {
                         $0.localizedStandardCompare($1) == .orderedAscending
                     }
+                    .map { fileName in
+                        Game(
+                            fileName: fileName,
+                            displayName: self.displayName(
+                                for: fileName,
+                                in: folderURL
+                            )
+                        )
+                    }
             }
         } catch {
             print("debug: failed to list files: \(error)")
@@ -55,13 +76,129 @@ class Webserver: ObservableObject {
         }
     }
 
+    /// The game's own title when the CIA yields one, otherwise the file name.
+    ///
+    /// An encrypted CIA with no meta section carries no readable title at
+    /// all, so falling back to the file name is an ordinary outcome here
+    /// rather than a failure worth surfacing on the page.
+    private func displayName(for fileName: String, in folderURL: URL) -> String
+    {
+        let fileURL = folderURL.appendingPathComponent(fileName)
+        let attributes = try? FileManager.default.attributesOfItem(
+            atPath: fileURL.path
+        )
+        let size = (attributes?[.size] as? NSNumber)?.int64Value ?? 0
+        let modified =
+            (attributes?[.modificationDate] as? Date)?
+            .timeIntervalSince1970 ?? 0
+        let key = "\(fileName)|\(size)|\(modified)"
+
+        titleCacheLock.lock()
+        let cached = titleCache[key]
+        titleCacheLock.unlock()
+        if let cached { return cached }
+
+        // The title inside the CIA is authoritative; the file name is the
+        // fallback, and the raw name the last resort.
+        var title = Webserver.titleFromFileName(fileName) ?? fileName
+        do {
+            let parsed = try CIAParser.extractEnglishTitle(from: fileURL)
+            let cleaned = Webserver.sanitizedTitle(parsed)
+            if !cleaned.isEmpty { title = cleaned }
+        } catch {
+            print("debug: no title in \(fileName): \(error)")
+        }
+
+        titleCacheLock.lock()
+        titleCache[key] = title
+        titleCacheLock.unlock()
+        return title
+    }
+
+    /// Recovers the game name from the usual release naming convention:
+    /// "<16-hex title id> <name> (<product code>) (v<version>) (<region>)".
+    ///
+    /// Plan B for the common case. An encrypted CIA with no meta section
+    /// carries no readable title anywhere in its bytes, and that describes
+    /// most of a real library, so the file name is all that is left.
+    private static func titleFromFileName(_ fileName: String) -> String? {
+        var name = fileName
+
+        // Trailing ".cia" and the scene tag before it ("legit",
+        // "piratelegit", "standard") are not part of the name.
+        if let dotCIA = name.range(
+            of: ".cia",
+            options: [.backwards, .caseInsensitive]
+        ), dotCIA.upperBound == name.endIndex {
+            name = String(name[..<dotCIA.lowerBound])
+        }
+
+        // A 16-digit hex title ID leads the name when present.
+        if name.prefix(16).count == 16,
+            name.prefix(16).allSatisfy(\.isHexDigit)
+        {
+            name = String(name.dropFirst(16))
+        }
+        name = name.trimmingCharacters(in: .whitespaces)
+
+        if let cut = firstMetadataGroup(in: name) {
+            name = String(name[..<cut])
+        }
+
+        name = name.trimmingCharacters(
+            in: CharacterSet(charactersIn: " -_.").union(
+                .whitespacesAndNewlines
+            )
+        )
+        return name.isEmpty ? nil : name
+    }
+
+    /// Where the release detail starts, i.e. the first "(...)" that reads as
+    /// metadata rather than as part of the title itself.
+    private static func firstMetadataGroup(in name: String) -> String.Index? {
+        var searchFrom = name.startIndex
+        while let open = name[searchFrom...].firstIndex(of: "("),
+            let close = name[open...].firstIndex(of: ")")
+        {
+            let group = String(name[name.index(after: open)..<close])
+            if isReleaseMetadata(group) { return open }
+            searchFrom = name.index(after: close)
+        }
+        return nil
+    }
+
+    private static func isReleaseMetadata(_ group: String) -> Bool {
+        let upper = group.uppercased()
+        // Product code, e.g. "CTR-P-BMAP" for 3DS or "KTR-..." for New 3DS.
+        if upper.hasPrefix("CTR-") || upper.hasPrefix("KTR-") { return true }
+        // Version, e.g. "v0.1.0".
+        if upper.hasPrefix("V"), group.count > 1,
+            group.dropFirst().allSatisfy({ $0.isNumber || $0 == "." })
+        {
+            return true
+        }
+        // Region or language, e.g. "E", "W", "USA", "JPN".
+        if !upper.isEmpty, upper.count <= 3, upper.allSatisfy(\.isLetter) {
+            return true
+        }
+        return false
+    }
+
+    /// SMDH short descriptions are NUL-padded to a fixed width and are free
+    /// to wrap onto a second line, neither of which belongs in a caption.
+    private static func sanitizedTitle(_ title: String) -> String {
+        String(title.prefix { $0 != "\0" })
+            .replacingOccurrences(of: "\n", with: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private func renderIndexPage(_ request: HttpRequest) -> HttpResponse {
         // The 3DS resolves whatever the QR code contains over the network, so
         // the codes have to carry an absolute URL this Mac answers on. A
         // relative path or "localhost" would be useless to the console.
         let baseURL = Webserver.baseURL(for: request, port: port)
-        let ciaFiles = listCiaFiles()
-        print("debug: ", ciaFiles)
+        let games = listGames()
+        print("debug: ", games.map(\.fileName))
 
         return scopes {
             html {
@@ -84,7 +221,7 @@ class Webserver: ObservableObject {
                     h1 {
                         inner = "Personal hShop"
                     }
-                    if ciaFiles.isEmpty {
+                    if games.isEmpty {
                         p {
                             classs = "hint"
                             inner = "No .cia files found"
@@ -100,10 +237,10 @@ class Webserver: ObservableObject {
                         }
                         div {
                             classs = "grid"
-                            for ciaFile in ciaFiles {
+                            for game in games {
                                 let target =
                                     baseURL + Webserver.downloadPrefix + "/"
-                                    + Webserver.pathEncoded(ciaFile)
+                                    + Webserver.pathEncoded(game.fileName)
                                 figure {
                                     classs = "card"
                                     div {
@@ -114,7 +251,7 @@ class Webserver: ObservableObject {
                                             img {
                                                 src = qr
                                                 alt = Webserver.htmlEscaped(
-                                                    ciaFile
+                                                    game.displayName
                                                 )
                                             }
                                         } else {
@@ -126,7 +263,9 @@ class Webserver: ObservableObject {
                                         }
                                     }
                                     figcaption {
-                                        inner = Webserver.htmlEscaped(ciaFile)
+                                        inner = Webserver.htmlEscaped(
+                                            game.displayName
+                                        )
                                     }
                                 }
                             }
