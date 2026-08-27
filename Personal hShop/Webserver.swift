@@ -1,3 +1,4 @@
+import CoreImage.CIFilterBuiltins
 import Foundation
 import SwiftUI
 import Swifter
@@ -25,6 +26,9 @@ class Webserver: ObservableObject {
         return allowed
     }()
 
+    /// Reused across requests: building a `CIContext` is expensive.
+    private static let ciContext = CIContext()
+
     private enum DownloadError: Error {
         case unavailable
     }
@@ -32,48 +36,105 @@ class Webserver: ObservableObject {
     private init() {
     }
 
-    private func renderIndexPage() {
-        html {
-            body {
-                let ciaFiles: [String]
-                do {
-                    ciaFiles = try bookmarkStore.withSecurityScopedFolderAccess
-                    { folderURL in
-                        let allFiles = try FileManager.default
-                            .contentsOfDirectory(atPath: folderURL.path)
-                        return
-                            allFiles
-                            .filter { $0.lowercased().hasSuffix(".cia") }
-                            .sorted {
-                                $0.localizedStandardCompare($1)
-                                    == .orderedAscending
-                            }
+    private func listCiaFiles() -> [String] {
+        do {
+            return try bookmarkStore.withSecurityScopedFolderAccess {
+                folderURL in
+                let allFiles = try FileManager.default
+                    .contentsOfDirectory(atPath: folderURL.path)
+                return
+                    allFiles
+                    .filter { $0.lowercased().hasSuffix(".cia") }
+                    .sorted {
+                        $0.localizedStandardCompare($1) == .orderedAscending
                     }
-                } catch {
-                    print("debug: failed to list files: \(error)")
-                    ciaFiles = []
+            }
+        } catch {
+            print("debug: failed to list files: \(error)")
+            return []
+        }
+    }
+
+    private func renderIndexPage(_ request: HttpRequest) -> HttpResponse {
+        // The 3DS resolves whatever the QR code contains over the network, so
+        // the codes have to carry an absolute URL this Mac answers on. A
+        // relative path or "localhost" would be useless to the console.
+        let baseURL = Webserver.baseURL(for: request, port: port)
+        let ciaFiles = listCiaFiles()
+        print("debug: ", ciaFiles)
+
+        return scopes {
+            html {
+                head {
+                    meta {
+                        charset = "utf-8"
+                    }
+                    meta {
+                        name = "viewport"
+                        content = "width=device-width, initial-scale=1"
+                    }
+                    title {
+                        inner = "Personal hShop"
+                    }
+                    style {
+                        inner = Webserver.stylesheet
+                    }
                 }
-                print("debug: ", ciaFiles)
-                if ciaFiles.isEmpty {
+                body {
                     h1 {
-                        inner = "No .cia files found"
+                        inner = "Personal hShop"
                     }
-                } else {
-                    ul {
-                        for ciaFile in ciaFiles {
-                            li {
-                                a {
-                                    href =
-                                        Webserver.downloadPrefix + "/"
-                                        + Webserver.pathEncoded(ciaFile)
-                                    inner = Webserver.htmlEscaped(ciaFile)
+                    if ciaFiles.isEmpty {
+                        p {
+                            classs = "hint"
+                            inner = "No .cia files found"
+                        }
+                    } else {
+                        p {
+                            classs = "hint"
+                            inner =
+                                "In FBI, choose Remote Install &rarr; Scan QR "
+                                + "Code, then point the 3DS at a code below. "
+                                + "Serving from "
+                                + Webserver.htmlEscaped(baseURL) + "."
+                        }
+                        div {
+                            classs = "grid"
+                            for ciaFile in ciaFiles {
+                                let target =
+                                    baseURL + Webserver.downloadPrefix + "/"
+                                    + Webserver.pathEncoded(ciaFile)
+                                figure {
+                                    classs = "card"
+                                    div {
+                                        classs = "qr"
+                                        if let qr = Webserver.qrCodeDataURI(
+                                            for: target
+                                        ) {
+                                            img {
+                                                src = qr
+                                                alt = Webserver.htmlEscaped(
+                                                    ciaFile
+                                                )
+                                            }
+                                        } else {
+                                            span {
+                                                classs = "qr-failed"
+                                                inner =
+                                                    "QR code unavailable"
+                                            }
+                                        }
+                                    }
+                                    figcaption {
+                                        inner = Webserver.htmlEscaped(ciaFile)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+        }(request)
     }
 
     /// Streams a single `.cia` file out of the bookmarked folder.
@@ -156,6 +217,119 @@ class Webserver: ObservableObject {
         return fileName.lowercased().hasSuffix(".cia")
     }
 
+    /// Renders `text` as a QR code and returns it as an inline `data:` URI.
+    ///
+    /// The bitmap is one pixel per module and the page scales it up with
+    /// `image-rendering: pixelated`, which keeps the modules crisp while
+    /// keeping the embedded image small.
+    private static func qrCodeDataURI(for text: String) -> String? {
+        guard let message = text.data(using: .utf8) else { return nil }
+
+        let generator = CIFilter.qrCodeGenerator()
+        generator.message = message
+        // Lowest correction level keeps the module count down, which matters
+        // for the 3DS camera: fewer, larger modules scan far more reliably
+        // than a dense code, and a screen has no dirt to correct for.
+        generator.correctionLevel = "L"
+
+        guard let image = generator.outputImage,
+            let cgImage = ciContext.createCGImage(image, from: image.extent)
+        else {
+            return nil
+        }
+
+        let bitmap = NSBitmapImageRep(cgImage: cgImage)
+        guard let png = bitmap.representation(using: .png, properties: [:])
+        else {
+            return nil
+        }
+        return "data:image/png;base64," + png.base64EncodedString()
+    }
+
+    /// The address the 3DS should call back on.
+    ///
+    /// A request that already arrived over the network proves which address
+    /// reaches this Mac, so its `Host` wins — but only when it is a numeric
+    /// address. FBI resolves neither "localhost" nor an mDNS ".local" name,
+    /// so anything else falls back to a LAN address found here.
+    private static func baseURL(for request: HttpRequest, port: Int) -> String {
+        if let host = request.headers["host"],
+            isRoutableIPv4(hostname(from: host))
+        {
+            return "http://" + host
+        }
+        if let address = lanAddress() {
+            return "http://\(address):\(port)"
+        }
+        return "http://localhost:\(port)"
+    }
+
+    /// Strips the port from a `Host` header value, leaving bracketed IPv6
+    /// literals and bare (colon-bearing) IPv6 addresses intact.
+    private static func hostname(from host: String) -> String {
+        if host.hasPrefix("[") {
+            return String(host.dropFirst().prefix { $0 != "]" })
+        }
+        let parts = host.split(separator: ":", omittingEmptySubsequences: false)
+        return parts.count == 2 ? String(parts[0]) : host
+    }
+
+    private static func isRoutableIPv4(_ name: String) -> Bool {
+        var address = in_addr()
+        guard name.withCString({ inet_pton(AF_INET, $0, &address) }) == 1 else {
+            return false
+        }
+        // 127.0.0.0/8 means the page was opened on this Mac, which tells us
+        // nothing about the address the console should use.
+        return UInt32(bigEndian: address.s_addr) >> 24 != 127
+    }
+
+    /// First usable IPv4 address of an up, non-loopback interface.
+    private static func lanAddress() -> String? {
+        var head: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&head) == 0, let first = head else { return nil }
+        defer { freeifaddrs(head) }
+
+        var candidates: [(interface: String, address: String)] = []
+        for pointer in sequence(first: first, next: { $0.pointee.ifa_next }) {
+            let flags = Int32(pointer.pointee.ifa_flags)
+            guard flags & IFF_UP != 0, flags & IFF_LOOPBACK == 0,
+                let address = pointer.pointee.ifa_addr,
+                address.pointee.sa_family == UInt8(AF_INET)
+            else {
+                continue
+            }
+
+            var host = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+            guard
+                getnameinfo(
+                    address,
+                    socklen_t(address.pointee.sa_len),
+                    &host,
+                    socklen_t(host.count),
+                    nil,
+                    0,
+                    NI_NUMERICHOST
+                ) == 0
+            else {
+                continue
+            }
+
+            candidates.append(
+                (
+                    String(cString: pointer.pointee.ifa_name),
+                    String(cString: host)
+                )
+            )
+        }
+
+        // en0 is Wi-Fi or the built-in Ethernet on every Mac, so it is the
+        // interface the 3DS is most likely to share a network with.
+        return candidates.first { $0.interface == "en0" }?.address
+            ?? candidates.first { $0.interface.hasPrefix("en") }?.address
+            ?? candidates.first?.address
+    }
+
     private static func pathEncoded(_ fileName: String) -> String {
         fileName.addingPercentEncoding(
             withAllowedCharacters: pathComponentAllowed)
@@ -171,6 +345,56 @@ class Webserver: ObservableObject {
             .replacingOccurrences(of: "'", with: "&#39;")
     }
 
+    private static let stylesheet = """
+        body {
+                font: 15px -apple-system, BlinkMacSystemFont, sans-serif;
+                margin: 0 auto;
+                padding: 2rem 1.5rem 3rem;
+                max-width: 1100px;
+                color: #1c1c1e;
+                background: #f5f5f7;
+            }
+            h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+            .hint { margin: 0 0 2rem; color: #6b6b70; }
+            .grid {
+                display: grid;
+                gap: 1.25rem;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            .card {
+                margin: 0;
+                padding: 1rem;
+                border-radius: 12px;
+                background: #fff;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: .75rem;
+            }
+            /* White padding around the code is the QR quiet zone; without it
+               scanners struggle to find the symbol. */
+            .qr {
+                background: #fff;
+                padding: 12px;
+                line-height: 0;
+            }
+            .qr img {
+                display: block;
+                width: 208px;
+                height: 208px;
+                image-rendering: pixelated;
+            }
+            .qr-failed { color: #b00020; font-size: .85rem; }
+            figcaption {
+                font-size: .8rem;
+                line-height: 1.35;
+                text-align: center;
+                word-break: break-word;
+                color: #3a3a3c;
+            }
+        """
+
     /// Quoted form for simple clients, RFC 5987 form for everything else.
     private static func contentDisposition(for fileName: String) -> String {
         let quoted = fileName.replacingOccurrences(of: "\"", with: "")
@@ -181,10 +405,8 @@ class Webserver: ObservableObject {
 
     func start() throws {
         if isRunning { return }
-        server["/"] = scopes {
-
-            self.renderIndexPage()
-
+        server["/"] = { [weak self] request in
+            self?.renderIndexPage(request) ?? .notFound
         }
         server["\(Webserver.downloadPrefix)/:name"] = { [weak self] request in
             self?.handleDownload(request) ?? .notFound
