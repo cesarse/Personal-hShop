@@ -18,7 +18,6 @@ struct CIAParser {
     enum ParserError: Error {
         case invalidHeader
         case cannotRead
-        case contentNotFound
         case smdhNotFound
     }
 
