@@ -3,33 +3,24 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE31C6472BE545380069F1A7 /* Webserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE31C6462BE545380069F1A7 /* Webserver.swift */; };
-		FE608F192BD9784F0056B110 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE608F182BD9784F0056B110 /* Application.swift */; };
-		FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE608F1A2BD9784F0056B110 /* SettingsView.swift */; };
-		FE608F1D2BD978500056B110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE608F1C2BD978500056B110 /* Assets.xcassets */; };
-		FE608F202BD978500056B110 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE608F1F2BD978500056B110 /* Preview Assets.xcassets */; };
 		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
-		FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */; };
-		FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7328E62FDCB335009ED82D /* BookmarkStore.swift */; };
-		FE965CEF3040BA0F0011D477 /* CIAParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE965CEE3040BA0F0011D477 /* CIAParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FE31C6462BE545380069F1A7 /* Webserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webserver.swift; sourceTree = "<group>"; };
 		FE608F152BD9784F0056B110 /* Personal hShop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Personal hShop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FE608F182BD9784F0056B110 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
-		FE608F1A2BD9784F0056B110 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		FE608F1C2BD978500056B110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FE608F1F2BD978500056B110 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		FE608F212BD978500056B110 /* Personal_hShop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Personal_hShop.entitlements; sourceTree = "<group>"; };
-		FE7328E62FDCB335009ED82D /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
-		FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessViewModel.swift; sourceTree = "<group>"; };
-		FE965CEE3040BA0F0011D477 /* CIAParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIAParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FE608F172BD9784F0056B110 /* Personal hShop */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Personal hShop";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FE608F122BD9784F0056B110 /* Frameworks */ = {
@@ -59,30 +50,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FE608F172BD9784F0056B110 /* Personal hShop */ = {
-			isa = PBXGroup;
-			children = (
-				FE965CEE3040BA0F0011D477 /* CIAParser.swift */,
-				FE7328E62FDCB335009ED82D /* BookmarkStore.swift */,
-				FE7328E72FDCB335009ED82D /* FolderAccessViewModel.swift */,
-				FE608F182BD9784F0056B110 /* Application.swift */,
-				FE608F1A2BD9784F0056B110 /* SettingsView.swift */,
-				FE31C6462BE545380069F1A7 /* Webserver.swift */,
-				FE608F1C2BD978500056B110 /* Assets.xcassets */,
-				FE608F212BD978500056B110 /* Personal_hShop.entitlements */,
-				FE608F1E2BD978500056B110 /* Preview Content */,
-			);
-			path = "Personal hShop";
-			sourceTree = "<group>";
-		};
-		FE608F1E2BD978500056B110 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				FE608F1F2BD978500056B110 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -97,6 +64,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FE608F172BD9784F0056B110 /* Personal hShop */,
 			);
 			name = "Personal hShop";
 			packageProductDependencies = (
@@ -122,7 +92,6 @@
 				};
 			};
 			buildConfigurationList = FE608F102BD9784F0056B110 /* Build configuration list for PBXProject "Personal hShop" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -133,6 +102,7 @@
 			packageReferences = (
 				FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = FE608F162BD9784F0056B110 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -147,8 +117,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE608F202BD978500056B110 /* Preview Assets.xcassets in Resources */,
-				FE608F1D2BD978500056B110 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,12 +127,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE608F1B2BD9784F0056B110 /* SettingsView.swift in Sources */,
-				FE7328E82FDCB335009ED82D /* FolderAccessViewModel.swift in Sources */,
-				FE965CEF3040BA0F0011D477 /* CIAParser.swift in Sources */,
-				FE7328E92FDCB335009ED82D /* BookmarkStore.swift in Sources */,
-				FE608F192BD9784F0056B110 /* Application.swift in Sources */,
-				FE31C6472BE545380069F1A7 /* Webserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
