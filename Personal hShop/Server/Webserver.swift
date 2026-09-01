@@ -35,17 +35,7 @@ class Webserver: ObservableObject {
     private var titleCache: [String: String] = [:]
     private let titleCacheLock = NSLock()
 
-    private enum DownloadError: Error {
-        case unavailable
-    }
-
     private init() {
-    }
-
-    /// A `.cia` in the shared folder, with the name to show for it.
-    private struct Game {
-        let fileName: String
-        let displayName: String
     }
 
     private func listGames() -> [Game] {

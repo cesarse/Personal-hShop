@@ -15,12 +15,6 @@ struct CIAParser {
     /// Where the SMDH sits inside a CIA meta section.
     private static let metaIconOffset: UInt32 = 0x400
 
-    enum ParserError: Error {
-        case invalidHeader
-        case cannotRead
-        case smdhNotFound
-    }
-
     /// Parses a CIA file and extracts the English game title
     static func extractEnglishTitle(from url: URL) throws -> String {
         let fileHandle = try FileHandle(forReadingFrom: url)
