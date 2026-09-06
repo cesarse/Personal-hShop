@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 import Swifter
 
-class Webserver: ObservableObject {
+final class Webserver: ObservableObject {
 
     @AppStorage("port") private var port: Int = 1234
     @AppStorage("openPage") private var openPage: Bool = false
