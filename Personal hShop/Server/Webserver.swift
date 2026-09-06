@@ -13,6 +13,7 @@ final class Webserver: ObservableObject {
 
     let server = HttpServer()
     private let bookmarkStore = BookmarkStore()
+    private let ciaParser = CIAParser()
 
     private static let downloadPrefix = "/files"
     private static let chunkSize = 512 * 1024
@@ -92,7 +93,7 @@ final class Webserver: ObservableObject {
         // fallback, and the raw name the last resort.
         var title = Webserver.titleFromFileName(fileName) ?? fileName
         do {
-            let parsed = try CIAParser.extractEnglishTitle(from: fileURL)
+            let parsed = try ciaParser.extractEnglishTitle(from: fileURL)
             let cleaned = Webserver.sanitizedTitle(parsed)
             if !cleaned.isEmpty { title = cleaned }
         } catch {
