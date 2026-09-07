@@ -17,95 +17,38 @@ struct IndexPage {
     ) -> HttpResponse {
         // Every code is rendered before the page is laid out, so the markup
         // below is only about structure.
-        let cards = games.map { game in
-            (
-                name: game.displayName,
-                qr: qrCode.dataURI(
-                    for: DownloadRoute.url(
-                        base: baseURL,
-                        fileName: game.fileName
-                    )
-                )
-            )
+        let cards = games.map {
+            GameCard(game: $0, baseURL: baseURL, qrCode: qrCode)
         }
 
         return scopes {
             html {
-                head {
-                    meta {
-                        charset = "utf-8"
-                    }
-                    meta {
-                        name = "viewport"
-                        content = "width=device-width, initial-scale=1"
-                    }
-                    title {
-                        inner = "Personal hShop"
-                    }
-                    style {
-                        inner = PageStylesheet.css
-                    }
-                }
-                body {
-                    h1 {
-                        inner = "Personal hShop"
-                    }
-                    if cards.isEmpty {
-                        p {
-                            classs = "hint"
-                            inner = "No .cia files found"
-                        }
-                    } else {
-                        p {
-                            classs = "hint"
-                            inner =
-                                "In FBI, choose Remote Install &rarr; Scan QR "
-                                + "Code, then point the 3DS at a code below. "
-                                + "Serving from "
-                                + IndexPage.htmlEscaped(baseURL) + "."
-                        }
-                        div {
-                            classs = "grid"
-                            for card in cards {
-                                figure {
-                                    classs = "card"
-                                    div {
-                                        classs = "qr"
-                                        if let qr = card.qr {
-                                            img {
-                                                src = qr
-                                                alt = IndexPage.htmlEscaped(
-                                                    card.name
-                                                )
-                                            }
-                                        } else {
-                                            span {
-                                                classs = "qr-failed"
-                                                inner =
-                                                    "QR code unavailable"
-                                            }
-                                        }
-                                    }
-                                    figcaption {
-                                        inner = IndexPage.htmlEscaped(
-                                            card.name
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                PageHead.render()
+                IndexPage.renderBody(cards: cards, baseURL: baseURL)
             }
         }(request)
     }
 
-    static func htmlEscaped(_ text: String) -> String {
-        text
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-            .replacingOccurrences(of: "'", with: "&#39;")
+    private static func renderBody(cards: [GameCard], baseURL: String) {
+        body {
+            h1 {
+                inner = "Personal hShop"
+            }
+            p {
+                classs = "hint"
+                inner = hint(cards: cards, baseURL: baseURL)
+            }
+            if !cards.isEmpty {
+                GameCardGrid.render(cards)
+            }
+        }
+    }
+
+    private static func hint(cards: [GameCard], baseURL: String) -> String {
+        guard !cards.isEmpty else { return "No .cia files found" }
+        return
+            "In FBI, choose Remote Install &rarr; Scan QR "
+            + "Code, then point the 3DS at a code below. "
+            + "Serving from " + HTMLText.escaped(baseURL) + "."
     }
 }

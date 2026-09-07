@@ -40,7 +40,7 @@ struct DownloadResponderTests {
     @Test("Offers the name in both a quoted and an encoded form")
     func buildsContentDisposition() {
         #expect(
-            DownloadResponder.contentDisposition(for: "game.cia")
+            DownloadHeaders.contentDisposition(for: "game.cia")
                 == "attachment; filename=\"game.cia\"; "
                 + "filename*=UTF-8''game.cia"
         )
@@ -48,7 +48,7 @@ struct DownloadResponderTests {
 
     @Test("Keeps quotes and backslashes out of the quoted form")
     func escapesTheQuotedForm() {
-        let header = DownloadResponder.contentDisposition(
+        let header = DownloadHeaders.contentDisposition(
             for: "a\"b\\c.cia"
         )
 
