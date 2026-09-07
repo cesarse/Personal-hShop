@@ -10,7 +10,18 @@
 		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		FE76D67E8375B9B07B131105 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE608F0D2BD9784F0056B110 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE608F142BD9784F0056B110;
+			remoteInfo = "Personal hShop";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		FE3CC308236A57A1F839EC57 /* Personal hShopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Personal hShopTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE608F152BD9784F0056B110 /* Personal hShop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Personal hShop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -20,9 +31,21 @@
 			path = "Personal hShop";
 			sourceTree = "<group>";
 		};
+		FE6A08B3BB220E2F95535A10 /* Personal hShopTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Personal hShopTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FE1C7F997FCFD4B45DF9B54D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE608F122BD9784F0056B110 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -38,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				FE608F172BD9784F0056B110 /* Personal hShop */,
+				FE6A08B3BB220E2F95535A10 /* Personal hShopTests */,
 				FE608F162BD9784F0056B110 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				FE608F152BD9784F0056B110 /* Personal hShop.app */,
+				FE3CC308236A57A1F839EC57 /* Personal hShopTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,6 +78,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FE3E46AA52E9B81B8D0FB24B /* Personal hShopTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEF29DA942F9F26B7BAA4C93 /* Build configuration list for PBXNativeTarget "Personal hShopTests" */;
+			buildPhases = (
+				FEB828DF06820C05A391210A /* Sources */,
+				FE1C7F997FCFD4B45DF9B54D /* Frameworks */,
+				FE53F22D8AD91FF9EEAF55AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FEEBA2527D8C6EC6791C53E2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FE6A08B3BB220E2F95535A10 /* Personal hShopTests */,
+			);
+			name = "Personal hShopTests";
+			productName = "Personal hShopTests";
+			productReference = FE3CC308236A57A1F839EC57 /* Personal hShopTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FE608F142BD9784F0056B110 /* Personal hShop */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FE608F242BD978500056B110 /* Build configuration list for PBXNativeTarget "Personal hShop" */;
@@ -86,6 +132,10 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					FE3E46AA52E9B81B8D0FB24B = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = FE608F142BD9784F0056B110;
+					};
 					FE608F142BD9784F0056B110 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -108,11 +158,19 @@
 			projectRoot = "";
 			targets = (
 				FE608F142BD9784F0056B110 /* Personal hShop */,
+				FE3E46AA52E9B81B8D0FB24B /* Personal hShopTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FE53F22D8AD91FF9EEAF55AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE608F132BD9784F0056B110 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,9 +188,46 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FEB828DF06820C05A391210A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		FEEBA2527D8C6EC6791C53E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE608F142BD9784F0056B110 /* Personal hShop */;
+			targetProxy = FE76D67E8375B9B07B131105 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		FE0A882EE0D25FFFD6F26F4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U84X9C3M99;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.cesarse.Personal-hShopTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal hShop.app/Contents/MacOS/Personal hShop";
+			};
+			name = Release;
+		};
 		FE608F222BD978500056B110 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -339,6 +434,28 @@
 			};
 			name = Release;
 		};
+		FE86E19A513879B75A1540A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U84X9C3M99;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.cesarse.Personal-hShopTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal hShop.app/Contents/MacOS/Personal hShop";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -356,6 +473,15 @@
 			buildConfigurations = (
 				FE608F252BD978500056B110 /* Debug */,
 				FE608F262BD978500056B110 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEF29DA942F9F26B7BAA4C93 /* Build configuration list for PBXNativeTarget "Personal hShopTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE86E19A513879B75A1540A3 /* Debug */,
+				FE0A882EE0D25FFFD6F26F4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
