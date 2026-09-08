@@ -6,8 +6,10 @@ enum FolderAccessError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .couldNotStartSecurityScopedAccess:
-            return
-                "The app could not start security-scoped access to the selected folder."
+            return String(
+                localized:
+                    "The app could not start security-scoped access to the selected folder."
+            )
         }
     }
 }

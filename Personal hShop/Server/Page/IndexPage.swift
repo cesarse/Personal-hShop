@@ -13,6 +13,7 @@ struct IndexPage {
     func response(
         games: [Game],
         baseURL: String,
+        pageText: PageText,
         for request: HttpRequest
     ) -> HttpResponse {
         // Every code is rendered before the page is laid out, so the markup
@@ -23,32 +24,55 @@ struct IndexPage {
 
         return scopes {
             html {
+                lang = pageText.language
                 PageHead.render()
-                IndexPage.renderBody(cards: cards, baseURL: baseURL)
+                IndexPage.renderBody(
+                    cards: cards,
+                    baseURL: baseURL,
+                    pageText: pageText
+                )
             }
         }(request)
     }
 
-    private static func renderBody(cards: [GameCard], baseURL: String) {
+    private static func renderBody(
+        cards: [GameCard],
+        baseURL: String,
+        pageText: PageText
+    ) {
         body {
             h1 {
                 inner = "Personal hShop"
             }
             p {
                 classs = "hint"
-                inner = hint(cards: cards, baseURL: baseURL)
+                inner = hint(
+                    cards: cards,
+                    baseURL: baseURL,
+                    pageText: pageText
+                )
             }
             if !cards.isEmpty {
-                GameCardGrid.render(cards)
+                GameCardGrid.render(cards, pageText: pageText)
             }
         }
     }
 
-    private static func hint(cards: [GameCard], baseURL: String) -> String {
-        guard !cards.isEmpty else { return "No .cia files found" }
-        return
-            "In FBI, choose Remote Install &rarr; Scan QR "
-            + "Code, then point the 3DS at a code below. "
-            + "Serving from " + HTMLText.escaped(baseURL) + "."
+    private static func hint(
+        cards: [GameCard],
+        baseURL: String,
+        pageText: PageText
+    ) -> String {
+        guard !cards.isEmpty else {
+            return pageText.localized("No .cia files found")
+        }
+        // "Remote Install" and "Scan QR Code" are FBI's own menu labels and
+        // FBI has no localisations, so they stay in English everywhere.
+        return pageText.localized(
+            """
+            In FBI, choose Remote Install → Scan QR Code, then point the 3DS \
+            at a code below. Available at \(HTMLText.escaped(baseURL)).
+            """
+        )
     }
 }

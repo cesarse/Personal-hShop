@@ -1,0 +1,111 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "In FBI, choose Remote Install → Scan QR Code, then point the 3DS at a code below. Available at %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie in FBI Remote Install → Scan QR Code und richten Sie den 3DS dann auf einen der Codes unten. Verfügbar unter %@."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En FBI, elige Remote Install → Scan QR Code y apunta la 3DS a uno de los códigos de abajo. Disponible en %@."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dans FBI, choisissez Remote Install → Scan QR Code, puis dirigez la 3DS vers l’un des codes ci-dessous. Disponible sur %@."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In FBI, scegli Remote Install → Scan QR Code, poi inquadra con il 3DS uno dei codici qui sotto. Disponibile su %@."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No FBI, escolha Remote Install → Scan QR Code e aponte o 3DS para um dos códigos abaixo. Disponível em %@."
+          }
+        }
+      }
+    },
+    "No .cia files found": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine .cia-Dateien gefunden"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se han encontrado archivos .cia"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun fichier .cia trouvé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun file .cia trovato"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum arquivo .cia encontrado"
+          }
+        }
+      }
+    },
+    "QR code unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-Code nicht verfügbar"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código QR no disponible"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code QR indisponible"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codice QR non disponibile"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código QR indisponível"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

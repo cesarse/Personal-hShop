@@ -61,6 +61,9 @@ final class Webserver: ObservableObject {
         return indexPage.response(
             games: games,
             baseURL: baseURL,
+            pageText: PageText(
+                acceptLanguage: request.headers["accept-language"]
+            ),
             for: request
         )
     }

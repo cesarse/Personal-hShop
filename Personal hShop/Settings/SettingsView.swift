@@ -40,7 +40,7 @@ struct SettingsView: View {
                     Button(
                         action: { showChooseFolderDialog = true },
                         label: {
-                            Label("Choose folder...", systemImage: "folder")
+                            Label("Choose folder…", systemImage: "folder")
                         }
                     )
                     .fileImporter(
@@ -58,7 +58,7 @@ struct SettingsView: View {
                         "Server port:",
                         value: $port,
                         format: .number.grouping(.never),
-                        prompt: Text("1234")
+                        prompt: Text(verbatim: "1234")
                     )
                     Spacer().padding(.horizontal)
                 }
