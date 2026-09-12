@@ -36,8 +36,9 @@ struct GameTitleResolver {
             print("debug: no title in \(fileName): \(error)")
         }
 
-        cache.store(title, for: key)
-        return title
+        let displayName = GameTitleCasing.titleCased(title)
+        cache.store(displayName, for: key)
+        return displayName
     }
 
     /// SMDH short descriptions are NUL-padded to a fixed width and are free

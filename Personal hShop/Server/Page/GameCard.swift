@@ -9,8 +9,7 @@ struct GameCard {
     init(game: Game, baseURL: String, qrCode: QRCode) {
         name = game.displayName
         qrDataURI = qrCode.dataURI(
-            for: DownloadRoute
-                .url(base: baseURL, fileName: game.fileName.capitalized)
+            for: DownloadRoute.url(base: baseURL, fileName: game.fileName)
         )
     }
 }
