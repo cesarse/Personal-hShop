@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
+		FE8C6710305EB69900CE2616 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FE8C670F305EB69900CE2616 /* AppIcon.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		FE3CC308236A57A1F839EC57 /* Personal hShopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Personal hShopTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE608F152BD9784F0056B110 /* Personal hShop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Personal hShop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE8C670F305EB69900CE2616 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -60,6 +62,7 @@
 		FE608F0C2BD9784F0056B110 = {
 			isa = PBXGroup;
 			children = (
+				FE8C670F305EB69900CE2616 /* AppIcon.icon */,
 				FE608F172BD9784F0056B110 /* Personal hShop */,
 				FE6A08B3BB220E2F95535A10 /* Personal hShopTests */,
 				FE608F162BD9784F0056B110 /* Products */,
@@ -180,6 +183,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE8C6710305EB69900CE2616 /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
