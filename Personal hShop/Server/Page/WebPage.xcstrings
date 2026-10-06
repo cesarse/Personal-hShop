@@ -36,6 +36,41 @@
         }
       }
     },
+    "Install the games shared from this Mac on your Nintendo 3DS: open FBI on the console, then scan the QR code of the game you want to install.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installieren Sie die von diesem Mac freigegebenen Spiele auf Ihrem Nintendo 3DS: Starten Sie FBI auf der Konsole und scannen Sie den QR-Code des gewünschten Spiels."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instala en tu Nintendo 3DS los juegos compartidos desde este Mac: abre FBI en la consola y escanea el código QR del juego que quieras instalar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installez sur votre Nintendo 3DS les jeux partagés depuis ce Mac : ouvrez FBI sur la console, puis scannez le code QR du jeu que vous voulez installer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installa sul tuo Nintendo 3DS i giochi condivisi da questo Mac: avvia FBI sulla console, poi scansiona il codice QR del gioco che vuoi installare."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instale no seu Nintendo 3DS os jogos compartilhados por este Mac: abra o FBI no console e escaneie o código QR do jogo que você quer instalar."
+          }
+        }
+      }
+    },
     "No .cia files found": {
       "extractionState": "manual",
       "localizations": {
@@ -67,6 +102,41 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nenhum arquivo .cia encontrado"
+          }
+        }
+      }
+    },
+    "QR code": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-Code"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código QR"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code QR"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codice QR"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código QR"
           }
         }
       }

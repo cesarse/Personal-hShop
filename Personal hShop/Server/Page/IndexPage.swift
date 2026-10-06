@@ -25,7 +25,7 @@ struct IndexPage {
         return scopes {
             html {
                 lang = pageText.language
-                PageHead.render()
+                PageHead.render(pageText: pageText)
                 IndexPage.renderBody(
                     cards: cards,
                     baseURL: baseURL,
@@ -41,7 +41,7 @@ struct IndexPage {
         pageText: PageText
     ) {
         body {
-            h1 {
+            element("h1", ["translate": "no"]) {
                 inner = "Personal hShop"
             }
             p {

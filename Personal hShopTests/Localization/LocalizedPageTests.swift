@@ -38,6 +38,45 @@ struct LocalizedPageTests {
         return String(decoding: collector.bytes, as: UTF8.self)
     }
 
+    /// The page's description as a browser reads it, in whatever order
+    /// Swifter wrote the attributes.
+    private func description(in markup: String) -> String? {
+        guard
+            let tag = markup.firstMatch(
+                of: /<meta[^>]*name="description"[^>]*>/),
+            let content = tag.output.firstMatch(of: /content="([^"]*)"/)
+        else {
+            return nil
+        }
+        // Entities would otherwise count several characters each.
+        return String(content.output.1)
+            .replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+            .replacingOccurrences(of: "&quot;", with: "\"")
+            .replacingOccurrences(of: "&#39;", with: "'")
+            .replacingOccurrences(of: "&amp;", with: "&")
+    }
+
+    @Test(
+        "The description alone is enough for Safari to judge the language",
+        arguments: ["de", "en", "es", "fr", "it", "pt-BR"]
+    )
+    func describesThePageAtLength(tag: String) throws {
+        let page = try markup(acceptLanguage: tag, games: [])
+        let text = try #require(description(in: page))
+
+        #expect(text.count >= PageHead.minimumDescriptionLength)
+    }
+
+    @Test("Describes the page in the language it was served in")
+    func describesThePageInItsLanguage() throws {
+        let french = try markup(acceptLanguage: "fr", games: [])
+
+        #expect(
+            description(in: french)?.hasPrefix(
+                "Installez sur votre Nintendo 3DS") == true)
+    }
+
     @Test("Declares the language it was served in")
     func declaresTheLanguage() throws {
         #expect(
@@ -74,5 +113,36 @@ struct LocalizedPageTests {
                 try markup(acceptLanguage: tag, games: []).contains(
                     "Personal hShop"))
         }
+    }
+
+    /// Safari skips text inside a form when judging the page's language,
+    /// which keeps the English titles from outvoting the page's own words.
+    @Test("The titles are kept out of Safari's language sample")
+    func keepsTitlesOutOfTheLanguageSample() throws {
+        let games = [Game(fileName: "g.cia", displayName: "Sonic Lost World")]
+        let french = try markup(acceptLanguage: "fr", games: games)
+
+        #expect(french.contains("<form><div class=\"grid\">"))
+        #expect(french.contains("</div></form>"))
+    }
+
+    @Test("Names are kept out of translation")
+    func marksNamesAsUntranslatable() throws {
+        let games = [Game(fileName: "g.cia", displayName: "Sonic Lost World")]
+        let french = try markup(acceptLanguage: "fr", games: games)
+
+        #expect(french.contains("<h1 translate=\"no\">Personal hShop</h1>"))
+        #expect(
+            french.contains(
+                "<figcaption translate=\"no\">Sonic Lost World</figcaption>"))
+    }
+
+    @Test("Each title appears once; the code is described in the page's words")
+    func describesTheCodeWithoutRepeatingTheTitle() throws {
+        let games = [Game(fileName: "g.cia", displayName: "Sonic Lost World")]
+        let french = try markup(acceptLanguage: "fr", games: games)
+
+        #expect(french.components(separatedBy: "Sonic Lost World").count == 2)
+        #expect(french.contains("alt=\"Code QR\""))
     }
 }
