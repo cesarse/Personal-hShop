@@ -29,13 +29,18 @@ final class Webserver: ObservableObject {
 
     func start() throws {
         if isRunning { return }
+        // The stored value is whatever was typed in Settings, so it may not
+        // be a port at all.
+        guard let listeningPort = ServerPort(port) else {
+            throw ServerPortError.outOfRange
+        }
         server["/"] = { [weak self] request in
             self?.renderIndexPage(request) ?? .notFound
         }
         server[DownloadRoute.pattern] = { [weak self] request in
             self?.downloads.respond(to: request) ?? .notFound
         }
-        try server.start(UInt16(port), forceIPv4: true)
+        try server.start(listeningPort.number, forceIPv4: true)
         print("debug: server started")
         isRunning = true
         if openPage, let url = URL(string: "http://localhost:\(port)") {

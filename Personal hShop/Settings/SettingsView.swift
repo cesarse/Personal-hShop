@@ -62,6 +62,12 @@ struct SettingsView: View {
                     )
                     Spacer().padding(.horizontal)
                 }
+                if ServerPort(port) == nil {
+                    Label(
+                        "Enter a port between 1 and 65535.",
+                        systemImage: "exclamationmark.triangle"
+                    ).symbolRenderingMode(.multicolor)
+                }
                 Toggle(
                     "Automatically open page after server starts",
                     isOn: $openPage
