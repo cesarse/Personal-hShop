@@ -20,7 +20,7 @@
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
-              8.756000000000085,
+              0,
               181
             ]
           }
@@ -48,10 +48,10 @@
           "image-name" : "Image.svg",
           "name" : "2.qrcode",
           "position" : {
-            "scale" : 1,
+            "scale" : 0.9,
             "translation-in-points" : [
-              0.8820000000000618,
-              -18.346999999999866
+              0,
+              -18
             ]
           }
         }
@@ -85,7 +85,7 @@
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
-              -1,
+              0,
               -86
             ]
           }
