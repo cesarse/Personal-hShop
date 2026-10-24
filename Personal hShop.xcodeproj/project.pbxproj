@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE6316632FDC030B009A248C /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = FE6316622FDC030B009A248C /* Swifter */; };
 		FE8C6710305EB69900CE2616 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FE8C670F305EB69900CE2616 /* AppIcon.icon */; };
+		FEB00B1E2FE0000000000001 /* Hummingbird in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000011 /* Hummingbird */; };
+		FEB00B1E2FE0000000000002 /* NIOCore in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000012 /* NIOCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +50,8 @@
 		FE608F122BD9784F0056B110 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				FE6316632FDC030B009A248C /* Swifter in Frameworks */,
+				FEB00B1E2FE0000000000001 /* Hummingbird in Frameworks */,
+				FEB00B1E2FE0000000000002 /* NIOCore in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -113,7 +115,8 @@
 			);
 			name = "Personal hShop";
 			packageProductDependencies = (
-				FE6316622FDC030B009A248C /* Swifter */,
+				FEB00B1E2FE0000000000011 /* Hummingbird */,
+				FEB00B1E2FE0000000000012 /* NIOCore */,
 			);
 			productName = "Personal hShop";
 			productReference = FE608F152BD9784F0056B110 /* Personal hShop.app */;
@@ -152,7 +155,8 @@
 			);
 			mainGroup = FE608F0C2BD9784F0056B110;
 			packageReferences = (
-				FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */,
+				FEB00B1E2FE0000000000021 /* XCRemoteSwiftPackageReference "hummingbird" */,
+				FEB00B1E2FE0000000000022 /* XCRemoteSwiftPackageReference "swift-nio" */,
 			);
 			preferredProjectObjectVersion = 110;
 			productRefGroup = FE608F162BD9784F0056B110 /* Products */;
@@ -483,21 +487,37 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */ = {
+		FEB00B1E2FE0000000000021 /* XCRemoteSwiftPackageReference "hummingbird" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/httpswift/swifter.git";
+			repositoryURL = "https://github.com/hummingbird-project/hummingbird.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				minimumVersion = 2.28.0;
+			};
+			traits = (
+				FullFoundation,
+			);
+		};
+		FEB00B1E2FE0000000000022 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.104.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FE6316622FDC030B009A248C /* Swifter */ = {
+		FEB00B1E2FE0000000000011 /* Hummingbird */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FE6316612FDC030B009A248C /* XCRemoteSwiftPackageReference "swifter" */;
-			productName = Swifter;
+			package = FEB00B1E2FE0000000000021 /* XCRemoteSwiftPackageReference "hummingbird" */;
+			productName = Hummingbird;
+		};
+		FEB00B1E2FE0000000000012 /* NIOCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEB00B1E2FE0000000000022 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

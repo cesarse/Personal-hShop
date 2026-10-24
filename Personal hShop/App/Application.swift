@@ -13,11 +13,13 @@ struct Application: App {
         .commands {
             CommandGroup(replacing: CommandGroupPlacement.newItem) {
                 Button("Start server") {
-                    do {
-                        try server.start()
-                    } catch {
-                        let dlg = NSAlert(error: error)
-                        dlg.runModal()
+                    Task {
+                        do {
+                            try await server.start()
+                        } catch {
+                            let dlg = NSAlert(error: error)
+                            dlg.runModal()
+                        }
                     }
                 }.disabled(server.isRunning)
                 Button("Stop server") { server.stop() }.disabled(

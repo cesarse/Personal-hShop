@@ -1,6 +1,6 @@
 import Foundation
 
-final class BookmarkStore {
+final class BookmarkStore: Sendable {
     private let key = "selectedFolderBookmark"
 
     func saveBookmarkData(_ data: Data) {

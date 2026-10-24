@@ -1,14 +1,14 @@
 import Foundation
+import Synchronization
 
 /// Titles already read out of the CIA files.
 ///
 /// Parsing scans a large part of each file, and the index page is rendered
 /// afresh on every request, so the result has to be kept. A class because
 /// every caller has to see the same entries.
-final class TitleCache {
+final class TitleCache: Sendable {
 
-    private var titles: [String: String] = [:]
-    private let lock = NSLock()
+    private let titles = Mutex<[String: String]>([:])
 
     /// A key for `fileURL` that stops matching as soon as the file changes,
     /// built from its name, size and modification date.
@@ -24,14 +24,10 @@ final class TitleCache {
     }
 
     func title(for key: String) -> String? {
-        lock.lock()
-        defer { lock.unlock() }
-        return titles[key]
+        titles.withLock { $0[key] }
     }
 
     func store(_ title: String, for key: String) {
-        lock.lock()
-        defer { lock.unlock() }
-        titles[key] = title
+        titles.withLock { $0[key] = title }
     }
 }

@@ -23,6 +23,13 @@ enum DownloadRoute {
             ?? fileName
     }
 
+    /// The file name a download request asks for. The router hands the path
+    /// segment over exactly as it arrived, still escaped by `encoded`, so it
+    /// is decoded here, before anything checks or looks up the name.
+    static func fileName(fromSegment segment: String) -> String? {
+        segment.removingPercentEncoding
+    }
+
     /// Characters that may appear unescaped in a single URL path component.
     /// `urlPathAllowed` permits "/", which would let a file name span
     /// several path segments, so it is removed here.

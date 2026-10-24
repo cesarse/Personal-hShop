@@ -1,5 +1,4 @@
 import Foundation
-import Swifter
 
 /// The page listing every game as a QR code the 3DS can scan.
 struct IndexPage {
@@ -10,52 +9,36 @@ struct IndexPage {
         self.qrCode = qrCode
     }
 
-    func response(
-        games: [Game],
-        baseURL: String,
-        pageText: PageText,
-        for request: HttpRequest
-    ) -> HttpResponse {
+    /// The whole document. It is built from its arguments alone, so any
+    /// number of requests can render it at the same time.
+    func html(games: [Game], baseURL: String, pageText: PageText) -> String {
         // Every code is rendered before the page is laid out, so the markup
         // below is only about structure.
         let cards = games.map {
             GameCard(game: $0, baseURL: baseURL, qrCode: qrCode)
         }
 
-        return scopes {
-            html {
-                lang = pageText.language
-                PageHead.render(pageText: pageText)
-                IndexPage.renderBody(
-                    cards: cards,
-                    baseURL: baseURL,
-                    pageText: pageText
-                )
-            }
-        }(request)
+        return "<!DOCTYPE html>"
+            + "<html lang=\"\(HTMLText.escaped(pageText.language))\">"
+            + PageHead.html(pageText: pageText)
+            + IndexPage.body(cards: cards, baseURL: baseURL, pageText: pageText)
+            + "</html>"
     }
 
-    private static func renderBody(
+    private static func body(
         cards: [GameCard],
         baseURL: String,
         pageText: PageText
-    ) {
-        body {
-            element("h1", ["translate": "no"]) {
-                inner = "Personal hShop"
-            }
-            p {
-                classs = "hint"
-                inner = hint(
-                    cards: cards,
-                    baseURL: baseURL,
-                    pageText: pageText
-                )
-            }
-            if !cards.isEmpty {
-                GameCardGrid.render(cards, pageText: pageText)
-            }
-        }
+    ) -> String {
+        let grid =
+            cards.isEmpty ? "" : GameCardGrid.html(cards, pageText: pageText)
+        return "<body>"
+            + "<h1 translate=\"no\">Personal hShop</h1>"
+            + "<p class=\"hint\">"
+            + hint(cards: cards, baseURL: baseURL, pageText: pageText)
+            + "</p>"
+            + grid
+            + "</body>"
     }
 
     private static func hint(

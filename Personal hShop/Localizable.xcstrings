@@ -71,6 +71,41 @@
         }
       }
     },
+    "Choose another port in Settings, then start the server again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählen Sie in den Einstellungen einen anderen Port und starten Sie den Server dann erneut."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige otro puerto en los ajustes y vuelve a iniciar el servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un autre port dans les réglages, puis redémarrez le serveur."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli un’altra porta nelle impostazioni, poi avvia di nuovo il server."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha outra porta nos ajustes e inicie o servidor novamente."
+          }
+        }
+      }
+    },
     "Choose folder…" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -184,6 +219,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhuma pasta selecionada"
+          }
+        }
+      }
+    },
+    "Port %@ is already in use." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port %@ wird bereits verwendet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El puerto %@ ya está en uso."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le port %@ est déjà utilisé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La porta %@ è già in uso."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A porta %@ já está em uso."
           }
         }
       }
@@ -402,6 +472,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O app não conseguiu obter acesso seguro à pasta selecionada."
+          }
+        }
+      }
+    },
+    "The server could not start." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Server konnte nicht gestartet werden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido iniciar el servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le serveur n’a pas pu démarrer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile avviare il server."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível iniciar o servidor."
           }
         }
       }

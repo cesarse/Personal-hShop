@@ -1,5 +1,5 @@
 import Foundation
-import Swifter
+import Hummingbird
 
 /// Answers a download request with the file it names.
 struct DownloadResponder {
@@ -12,39 +12,53 @@ struct DownloadResponder {
         self.bookmarkStore = bookmarkStore
     }
 
-    func respond(to request: HttpRequest) -> HttpResponse {
-        // Swifter's router already percent-decodes each path segment before it
-        // reaches `params`, so the name arrives ready to use here.
-        guard let fileName = request.params[":name"],
+    /// `segment` is the path segment naming the file, still escaped.
+    func respond(toSegment segment: String?) -> Response {
+        guard let segment,
+            let fileName = DownloadRoute.fileName(fromSegment: segment),
             DownloadResponder.isServableFileName(fileName)
         else {
-            return .notFound
+            return Response(status: .notFound)
         }
 
         do {
             let file = try DownloadableFile(named: fileName, in: bookmarkStore)
-            return .raw(
-                200,
-                "OK",
-                DownloadHeaders.serving(fileName, ofSize: file.size),
-                DownloadResponder.stream(file)
+            return Response(
+                status: .ok,
+                headers: DownloadHeaders.serving(fileName, ofSize: file.size),
+                body: DownloadResponder.stream(file)
             )
         } catch {
             print("debug: failed to serve \(fileName): \(error)")
-            return .notFound
+            return Response(status: .notFound)
         }
     }
 
-    private static func stream(
-        _ file: DownloadableFile
-    ) -> (HttpResponseBodyWriter) throws -> Void {
-        { writer in
+    private static func stream(_ file: DownloadableFile) -> ResponseBody {
+        ResponseBody(contentLength: Int(file.size)) { writer in
             defer { try? file.handle.close() }
-            while let chunk = try file.handle.read(upToCount: chunkSize),
-                !chunk.isEmpty
-            {
-                try writer.write(chunk)
+            // Exactly the size announced, even if the file grows meanwhile:
+            // the connection stays open for the next request, so a byte past
+            // it would be read as the start of the next response.
+            var remaining = file.size
+            while remaining > 0 {
+                let count = Int(min(UInt64(chunkSize), remaining))
+                // Each chunk comes back autoreleased, and nothing drains the
+                // pool while the download runs, so without one per read the
+                // whole file would pile up in memory.
+                let chunk = try autoreleasepool {
+                    try file.handle.read(upToCount: count)
+                }
+                // The file shrank: ending the connection tells the client at
+                // once, instead of leaving it waiting for the missing bytes.
+                guard let chunk, !chunk.isEmpty else {
+                    throw DownloadError.unavailable
+                }
+                remaining -= UInt64(chunk.count)
+                // Suspends while the console is slow to take the bytes.
+                try await writer.write(ByteBuffer(bytes: chunk))
             }
+            try await writer.finish(nil)
         }
     }
 

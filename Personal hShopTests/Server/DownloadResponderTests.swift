@@ -54,4 +54,11 @@ struct DownloadResponderTests {
 
         #expect(header.contains("filename=\"abc.cia\""))
     }
+
+    @Test("Escapes everything RFC 8187 does not allow in the encoded form")
+    func escapesTheEncodedForm() {
+        let header = DownloadHeaders.contentDisposition(for: "a;b=c (é).cia")
+
+        #expect(header.hasSuffix("filename*=UTF-8''a%3Bb%3Dc%20%28%C3%A9%29.cia"))
+    }
 }

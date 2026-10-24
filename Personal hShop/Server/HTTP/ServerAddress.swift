@@ -1,5 +1,4 @@
 import Foundation
-import Swifter
 
 /// The address the 3DS should call back on.
 struct ServerAddress {
@@ -8,8 +7,8 @@ struct ServerAddress {
     /// reaches this Mac, so its `Host` wins — but only when it is a numeric
     /// address. FBI resolves neither "localhost" nor an mDNS ".local" name,
     /// so anything else falls back to a LAN address found here.
-    func baseURL(for request: HttpRequest, port: Int) -> String {
-        if let host = request.headers["host"],
+    func baseURL(host: String?, port: Int) -> String {
+        if let host,
             ServerAddress.isRoutableIPv4(ServerAddress.hostname(from: host))
         {
             return "http://" + host

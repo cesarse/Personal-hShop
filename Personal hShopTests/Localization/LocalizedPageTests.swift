@@ -1,45 +1,21 @@
 import Foundation
-import Swifter
 import Testing
 
 @testable import Personal_hShop
 
-/// Collects whatever a response writes, so the markup can be inspected.
-private final class BodyCollector: HttpResponseBodyWriter {
-    var bytes: [UInt8] = []
-    func write(_ file: String.File) throws {}
-    func write(_ data: [UInt8]) throws { bytes += data }
-    func write(_ data: ArraySlice<UInt8>) throws { bytes += data }
-    func write(_ data: NSData) throws {
-        bytes += [UInt8](Data(referencing: data))
-    }
-    func write(_ data: Data) throws { bytes += [UInt8](data) }
-}
-
-/// Serialised: Swifter's HTML DSL renders through global mutable state
-/// (`scopesBuffer` plus one global per attribute), so two renders running at
-/// once corrupt each other.
-@Suite(.serialized)
 struct LocalizedPageTests {
 
     private func markup(acceptLanguage: String?, games: [Game]) throws -> String
     {
-        let response = IndexPage().response(
+        IndexPage().html(
             games: games,
             baseURL: "http://10.0.0.1:1234",
-            pageText: PageText(acceptLanguage: acceptLanguage),
-            for: HttpRequest()
+            pageText: PageText(acceptLanguage: acceptLanguage)
         )
-        guard case .raw(_, _, _, let writer) = response, let writer else {
-            return ""
-        }
-        let collector = BodyCollector()
-        try writer(collector)
-        return String(decoding: collector.bytes, as: UTF8.self)
     }
 
-    /// The page's description as a browser reads it, in whatever order
-    /// Swifter wrote the attributes.
+    /// The page's description as a browser reads it, whatever the order of
+    /// its attributes.
     private func description(in markup: String) -> String? {
         guard
             let tag = markup.firstMatch(
@@ -144,5 +120,35 @@ struct LocalizedPageTests {
 
         #expect(french.components(separatedBy: "Sonic Lost World").count == 2)
         #expect(french.contains("alt=\"Code QR\""))
+    }
+
+    /// Several clients may load the page at once, and each must get its own
+    /// page, whole and in its own language.
+    @Test("Pages rendered at the same time stay apart")
+    func rendersConcurrently() async throws {
+        let languages = ["de", "en", "es", "fr", "it", "pt-BR"]
+        let games = [Game(fileName: "g.cia", displayName: "Sonic Lost World")]
+        let expected = try Dictionary(
+            uniqueKeysWithValues: languages.map {
+                ($0, try markup(acceptLanguage: $0, games: games))
+            }
+        )
+
+        let rendered = try await withThrowingTaskGroup(
+            of: (String, String).self
+        ) { group in
+            for round in 0..<200 {
+                let language = languages[round % languages.count]
+                group.addTask {
+                    (language, try markup(acceptLanguage: language, games: games))
+                }
+            }
+            return try await group.reduce(into: []) { $0.append($1) }
+        }
+
+        #expect(rendered.count == 200)
+        for (language, page) in rendered {
+            #expect(page == expected[language])
+        }
     }
 }
