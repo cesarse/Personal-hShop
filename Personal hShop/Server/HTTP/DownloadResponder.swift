@@ -37,6 +37,7 @@ struct DownloadResponder {
     private static func stream(_ file: DownloadableFile) -> ResponseBody {
         ResponseBody(contentLength: Int(file.size)) { writer in
             defer { try? file.handle.close() }
+            await KeepAwake.shared.touch()
             // Exactly the size announced, even if the file grows meanwhile:
             // the connection stays open for the next request, so a byte past
             // it would be read as the start of the next response.
@@ -57,6 +58,7 @@ struct DownloadResponder {
                 remaining -= UInt64(chunk.count)
                 // Suspends while the console is slow to take the bytes.
                 try await writer.write(ByteBuffer(bytes: chunk))
+                await KeepAwake.shared.touch()
             }
             try await writer.finish(nil)
         }

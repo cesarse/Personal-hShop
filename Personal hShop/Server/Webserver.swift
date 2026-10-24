@@ -99,6 +99,8 @@ final class Webserver: ObservableObject {
         stopping = serving
         self.serving = nil
         isRunning = false
+        // Nothing is being sent any more, so the Mac may sleep right away.
+        KeepAwake.shared.release()
     }
 
     /// The server can also end on its own, when its socket fails.
@@ -106,6 +108,7 @@ final class Webserver: ObservableObject {
         guard run == generation else { return }
         serving = nil
         isRunning = false
+        KeepAwake.shared.release()
     }
 
     private func makeRouter(port: Int) -> Router<BasicRequestContext> {
