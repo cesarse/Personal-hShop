@@ -722,72 +722,142 @@
         }
       }
     },
-    "The server is running.\nOpen the File menu and click Stop server." : {
+    "The server is running." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Server läuft.\nÖffnen Sie das Menü Ablage und klicken Sie auf Server stoppen."
+            "value" : "Der Server läuft."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El servidor está en marcha.\nAbre el menú Archivo y haz clic en Detener servidor."
+            "value" : "El servidor está en marcha."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le serveur est en marche.\nOuvrez le menu Fichier et cliquez sur Arrêter le serveur."
+            "value" : "Le serveur est en marche."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il server è in esecuzione.\nApri il menu File e fai clic su Arresta server."
+            "value" : "Il server è in esecuzione."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O servidor está em execução.\nAbra o menu Arquivo e clique em Parar servidor."
+            "value" : "O servidor está em execução."
           }
         }
       }
     },
-    "The server is stopped.\nOpen the File menu and click Start server." : {
+    "Open the File menu and click Stop server." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Server ist gestoppt.\nÖffnen Sie das Menü Ablage und klicken Sie auf Server starten."
+            "value" : "Öffnen Sie das Menü Ablage und klicken Sie auf Server stoppen."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El servidor está detenido.\nAbre el menú Archivo y haz clic en Iniciar servidor."
+            "value" : "Abre el menú Archivo y haz clic en Detener servidor."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le serveur est arrêté.\nOuvrez le menu Fichier et cliquez sur Démarrer le serveur."
+            "value" : "Ouvrez le menu Fichier et cliquez sur Arrêter le serveur."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il server è arrestato.\nApri il menu File e fai clic su Avvia server."
+            "value" : "Apri il menu File e fai clic su Arresta server."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O servidor está parado.\nAbra o menu Arquivo e clique em Iniciar servidor."
+            "value" : "Abra o menu Arquivo e clique em Parar servidor."
+          }
+        }
+      }
+    },
+    "The server is stopped." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Server ist gestoppt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El servidor está detenido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le serveur est arrêté."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il server è arrestato."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O servidor está parado."
+          }
+        }
+      }
+    },
+    "Open the File menu and click Start server." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnen Sie das Menü Ablage und klicken Sie auf Server starten."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre el menú Archivo y haz clic en Iniciar servidor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez le menu Fichier et cliquez sur Démarrer le serveur."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri il menu File e fai clic su Avvia server."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abra o menu Arquivo e clique em Iniciar servidor."
           }
         }
       }

@@ -28,9 +28,13 @@ struct StartView: View {
     }
 
     private var serverStatus: LocalizedStringKey {
+        server.isRunning ? "The server is running." : "The server is stopped."
+    }
+
+    private var serverInstruction: LocalizedStringKey {
         server.isRunning
-            ? "The server is running.\nOpen the File menu and click Stop server."
-            : "The server is stopped.\nOpen the File menu and click Start server."
+            ? "Open the File menu and click Stop server."
+            : "Open the File menu and click Start server."
     }
 
     var body: some View {
@@ -45,12 +49,12 @@ struct StartView: View {
                     .bold()
                 Text("Version \(appVersion)")
                     .foregroundStyle(.secondary)
-                Spacer()
-                    .frame(height: 1)
             }
             VStack(alignment: HorizontalAlignment.leading, spacing: 8) {
                 Text(serverStatus)
-                    .multilineTextAlignment(.center)
+                // Long in some languages: wraps instead of being truncated.
+                Text(serverInstruction).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Spacer()
                     .frame(height: 1)
                 Text("Suggestions, problems?")
@@ -65,8 +69,10 @@ struct StartView: View {
                 Link("Privacy Policy", destination: Self.privacyPolicyURL)
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: 320, height: 440)
+        // No fixed height: the window grows to fit the wrapped text.
+        .frame(width: 320)
         // A light tint over the window background, so it stays pale green in
         // Light Mode and turns into a dark green in Dark Mode.
         .background(Color.green.opacity(0.12))
