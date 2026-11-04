@@ -7,6 +7,13 @@ struct Application: App {
     @StateObject private var viewModel = FolderAccessViewModel.instance
 
     var body: some Scene {
+        // A group rather than a single Window, which would quit the app when
+        // closed, cutting off a console still downloading. The Dock icon
+        // brings it back.
+        WindowGroup {
+            StartView()
+        }
+        .windowResizability(.contentSize)
         Settings {
             SettingsView()
         }
@@ -26,7 +33,6 @@ struct Application: App {
                     !server.isRunning
                 )
             }
-            CommandGroup(replacing: CommandGroupPlacement.saveItem) {}
             CommandGroup(replacing: CommandGroupPlacement.appVisibility) {}
             CommandGroup(replacing: CommandGroupPlacement.systemServices) {}
         }

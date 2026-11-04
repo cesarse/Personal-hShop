@@ -10,6 +10,12 @@ struct LocalizationCoverageTests {
     private static let languages = ["de", "en", "es", "fr", "it", "pt-BR"]
     private static let tables = ["Localizable", "WebPage"]
 
+    /// Correct translations that happen to be spelled as in English.
+    private static let spelledAlike = [
+        "de": ["Version %@"],
+        "fr": ["Version %@"],
+    ]
+
     private func keys(_ language: String, _ table: String) -> Set<String> {
         guard
             let path = Bundle.main.path(
@@ -54,7 +60,7 @@ struct LocalizationCoverageTests {
     @Test("No translation was left as the English source")
     func nothingIsUntranslated() {
         // "Personal hShop" is a product name and is not in the catalogues,
-        // so anything left identical here is an oversight.
+        // so anything else left identical here is an oversight.
         for language in Self.languages where language != "en" {
             for table in Self.tables {
                 guard
@@ -73,7 +79,8 @@ struct LocalizationCoverageTests {
                     Issue.record("\(language)/\(table) unreadable")
                     continue
                 }
-                for (key, value) in entries {
+                for (key, value) in entries
+                where Self.spelledAlike[language]?.contains(key) != true {
                     #expect(key != value, "\(language)/\(table): \(key)")
                 }
             }
