@@ -29,17 +29,21 @@ struct ServerAddress {
         return parts.count == 2 ? String(parts[0]) : host
     }
 
+    /// Whether `name` is a numeric IPv4 address outside 127.0.0.0/8. A loopback
+    /// address means the page was opened on this Mac, which says nothing about
+    /// the address the console should use.
     static func isRoutableIPv4(_ name: String) -> Bool {
         var address = in_addr()
         guard name.withCString({ inet_pton(AF_INET, $0, &address) }) == 1 else {
             return false
         }
-        // 127.0.0.0/8 means the page was opened on this Mac, which tells us
-        // nothing about the address the console should use.
-        return UInt32(bigEndian: address.s_addr) >> 24 != 127
+        let isLoopback = UInt32(bigEndian: address.s_addr) >> 24 == 127
+        return !isLoopback
     }
 
-    /// First usable IPv4 address of an up, non-loopback interface.
+    /// First usable IPv4 address of an up, non-loopback interface, preferring
+    /// en0: it is Wi-Fi or the built-in Ethernet on every Mac, so it is the
+    /// interface the 3DS is most likely to share a network with.
     private static func lanAddress() -> String? {
         var head: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&head) == 0, let first = head else { return nil }
@@ -78,8 +82,6 @@ struct ServerAddress {
             )
         }
 
-        // en0 is Wi-Fi or the built-in Ethernet on every Mac, so it is the
-        // interface the 3DS is most likely to share a network with.
         return candidates.first { $0.interface == "en0" }?.address
             ?? candidates.first { $0.interface.hasPrefix("en") }?.address
             ?? candidates.first?.address

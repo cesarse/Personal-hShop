@@ -34,34 +34,45 @@ struct DownloadResponder {
         }
     }
 
+    /// Sends exactly the size announced, even if the file grows meanwhile:
+    /// the connection stays open for the next request, so a byte past it would
+    /// be read as the start of the next response. Writing suspends while the
+    /// console is slow to take the bytes.
     private static func stream(_ file: DownloadableFile) -> ResponseBody {
         ResponseBody(contentLength: Int(file.size)) { writer in
             defer { try? file.handle.close() }
             await KeepAwake.shared.touch()
-            // Exactly the size announced, even if the file grows meanwhile:
-            // the connection stays open for the next request, so a byte past
-            // it would be read as the start of the next response.
             var remaining = file.size
             while remaining > 0 {
-                let count = Int(min(UInt64(chunkSize), remaining))
-                // Each chunk comes back autoreleased, and nothing drains the
-                // pool while the download runs, so without one per read the
-                // whole file would pile up in memory.
-                let chunk = try autoreleasepool {
-                    try file.handle.read(upToCount: count)
-                }
-                // The file shrank: ending the connection tells the client at
-                // once, instead of leaving it waiting for the missing bytes.
-                guard let chunk, !chunk.isEmpty else {
-                    throw DownloadError.unavailable
-                }
+                let chunk = try readNextChunk(
+                    of: file,
+                    upToCount: Int(min(UInt64(chunkSize), remaining))
+                )
                 remaining -= UInt64(chunk.count)
-                // Suspends while the console is slow to take the bytes.
                 try await writer.write(ByteBuffer(bytes: chunk))
                 await KeepAwake.shared.touch()
             }
             try await writer.finish(nil)
         }
+    }
+
+    /// Each chunk comes back autoreleased, and nothing drains the pool while
+    /// the download runs, so without a pool per read the whole file would pile
+    /// up in memory.
+    ///
+    /// Throws when the file has shrunk: ending the connection tells the client
+    /// at once, instead of leaving it waiting for the missing bytes.
+    private static func readNextChunk(
+        of file: DownloadableFile,
+        upToCount count: Int
+    ) throws -> Data {
+        let chunk = try autoreleasepool {
+            try file.handle.read(upToCount: count)
+        }
+        guard let chunk, !chunk.isEmpty else {
+            throw DownloadError.unavailable
+        }
+        return chunk
     }
 
     /// Rejects anything that is not a plain `.cia` file name, which also keeps

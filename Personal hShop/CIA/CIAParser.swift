@@ -1,10 +1,3 @@
-//
-//  CIAParser.swift
-//  Personal hShop
-//
-//  Created by César Seragiotto on 27/08/2026.
-//
-
 import Foundation
 
 /// Reads the metadata a CIA file carries about itself.

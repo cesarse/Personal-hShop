@@ -47,12 +47,13 @@ final class KeepAwake {
         end()
     }
 
+    /// Stops early when `release()` cancels the sleep in the meantime.
     private func releaseWhenIdle() async {
         while ContinuousClock.now < deadline {
             do {
                 try await Task.sleep(until: deadline)
             } catch {
-                return  // Released in the meantime.
+                return
             }
         }
         guard !Task.isCancelled else { return }

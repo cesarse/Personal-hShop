@@ -19,7 +19,7 @@ struct SMDHTitleReader {
             throw ParserError.cannotRead
         }
 
-        // The slot is padded with null characters out to its fixed width.
-        return rawTitle.trimmingCharacters(in: CharacterSet(["\0"]))
+        let fixedWidthNullPadding = CharacterSet(["\0"])
+        return rawTitle.trimmingCharacters(in: fixedWidthNullPadding)
     }
 }

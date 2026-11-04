@@ -14,9 +14,9 @@ enum ServerStartError: LocalizedError {
         self.init(errno: ioError.errnoCode, port: port)
     }
 
+    /// Uses the system's short description, such as "Operation not permitted",
+    /// because NIO's own wording names internal functions.
     init(errno code: Int32, port: Int) {
-        // The system's short description, such as "Operation not permitted";
-        // NIO's own wording names internal functions.
         self =
             code == EADDRINUSE
             ? .portInUse(port) : .other(detail: String(cString: strerror(code)))
@@ -25,9 +25,10 @@ enum ServerStartError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .portInUse(let port):
-            // Passed as text: a number would be grouped as "1 234" or "1,234"
-            // depending on the Mac's language.
-            return String(localized: "Port \(String(port)) is already in use.")
+            let portWithoutGrouping = String(port)
+            return String(
+                localized: "Port \(portWithoutGrouping) is already in use."
+            )
         case .other:
             return String(localized: "The server could not start.")
         }

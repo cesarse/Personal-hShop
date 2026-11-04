@@ -8,6 +8,7 @@ import SwiftUI
 @MainActor
 final class Webserver: ObservableObject {
 
+    /// Whatever was typed in Settings, so it may not be a port at all.
     @AppStorage("port") private var port: Int = 1234
     @AppStorage("openPage") private var openPage: Bool = false
 
@@ -19,6 +20,8 @@ final class Webserver: ObservableObject {
     /// the timer only runs between requests.
     private static let idleTimeout = TimeAmount.seconds(30)
 
+    /// Shared by both routes, so the folder is resolved the same way whether
+    /// a page is being rendered or a file served.
     private let bookmarkStore: BookmarkStore
     private let library: GameLibrary
 
@@ -32,18 +35,15 @@ final class Webserver: ObservableObject {
     private var generation = 0
 
     private init() {
-        // One store for both routes, so the folder is resolved the same way
-        // whether a page is being rendered or a file served.
         bookmarkStore = BookmarkStore()
         library = GameLibrary(bookmarkStore: bookmarkStore)
         FileDescriptorLimit.raise(to: 4096)
     }
 
     /// Returns once the server is listening, or throws why it could not.
+    /// Being stopped while starting is not an error, so that returns normally.
     func start() async throws {
         if serving != nil { return }
-        // The stored value is whatever was typed in Settings, so it may not
-        // be a port at all.
         guard let listeningPort = ServerPort(port) else {
             throw ServerPortError.outOfRange
         }
@@ -51,7 +51,6 @@ final class Webserver: ObservableObject {
         let current = generation
         let portNumber = Int(listeningPort.number)
         let listening = ListeningSignal()
-        // Qualified: the app's own entry point is also called Application.
         let application = Hummingbird.Application(
             router: makeRouter(port: portNumber),
             server: .http1(configuration: .init(idleTimeout: Self.idleTimeout)),
@@ -67,8 +66,8 @@ final class Webserver: ObservableObject {
             await previous?.value
             do {
                 try await application.run()
-                // Ended without an error before listening: it was stopped.
-                listening.resolve(.failure(CancellationError()))
+                let stoppedBeforeListening = CancellationError()
+                listening.resolve(.failure(stoppedBeforeListening))
             } catch {
                 listening.resolve(.failure(error))
             }
@@ -78,7 +77,6 @@ final class Webserver: ObservableObject {
         do {
             try await listening.wait()
         } catch {
-            // Stopped while starting: nothing went wrong.
             guard generation == current else { return }
             serving = nil
             throw ServerStartError(error, port: portNumber)
@@ -91,7 +89,8 @@ final class Webserver: ObservableObject {
         }
     }
 
-    /// Closes the port and every connection, downloads included.
+    /// Closes the port and every connection, downloads included. Nothing is
+    /// being sent any more, so the Mac may sleep right away.
     func stop() {
         guard let serving else { return }
         generation += 1
@@ -99,7 +98,6 @@ final class Webserver: ObservableObject {
         stopping = serving
         self.serving = nil
         isRunning = false
-        // Nothing is being sent any more, so the Mac may sleep right away.
         KeepAwake.shared.release()
     }
 
@@ -111,12 +109,12 @@ final class Webserver: ObservableObject {
         KeepAwake.shared.release()
     }
 
+    /// HEAD gets the GET headers without the body, so `curl -I` and download
+    /// managers still see what is there.
     private func makeRouter(port: Int) -> Router<BasicRequestContext> {
         let index = IndexResponder(library: library, port: port)
         let downloads = DownloadResponder(bookmarkStore: bookmarkStore)
 
-        // HEAD gets the GET headers without the body, as it did with Swifter,
-        // so `curl -I` and download managers still see what is there.
         let router = Router(options: .autoGenerateHeadEndpoints)
         router.get("/") { request, _ in
             await index.respond(to: request)

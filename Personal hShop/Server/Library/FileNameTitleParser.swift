@@ -9,24 +9,9 @@ import Foundation
 struct FileNameTitleParser {
 
     func title(from fileName: String) -> String? {
-        var name = fileName
-
-        // Trailing ".cia" and the scene tag before it ("legit",
-        // "piratelegit", "standard") are not part of the name.
-        if let dotCIA = name.range(
-            of: ".cia",
-            options: [.backwards, .caseInsensitive]
-        ), dotCIA.upperBound == name.endIndex {
-            name = String(name[..<dotCIA.lowerBound])
-        }
-
-        // A 16-digit hex title ID leads the name when present.
-        if name.prefix(16).count == 16,
-            name.prefix(16).allSatisfy(\.isHexDigit)
-        {
-            name = String(name.dropFirst(16))
-        }
-        name = name.trimmingCharacters(in: .whitespaces)
+        var name = removingLeadingTitleID(
+            from: removingCIAExtension(from: fileName)
+        ).trimmingCharacters(in: .whitespaces)
 
         if let cut = firstMetadataGroup(in: name) {
             name = String(name[..<cut])
@@ -38,6 +23,28 @@ struct FileNameTitleParser {
             )
         )
         return name.isEmpty ? nil : name
+    }
+
+    private func removingCIAExtension(from fileName: String) -> String {
+        guard
+            let dotCIA = fileName.range(
+                of: ".cia",
+                options: [.backwards, .caseInsensitive]
+            ), dotCIA.upperBound == fileName.endIndex
+        else {
+            return fileName
+        }
+        return String(fileName[..<dotCIA.lowerBound])
+    }
+
+    private func removingLeadingTitleID(from name: String) -> String {
+        let titleIDLength = 16
+        let prefix = name.prefix(titleIDLength)
+        guard prefix.count == titleIDLength, prefix.allSatisfy(\.isHexDigit)
+        else {
+            return name
+        }
+        return String(name.dropFirst(titleIDLength))
     }
 
     /// Where the release detail starts, i.e. the first "(...)" that reads as
@@ -55,19 +62,25 @@ struct FileNameTitleParser {
     }
 
     func isReleaseMetadata(_ group: String) -> Bool {
+        isProductCode(group) || isVersion(group) || isRegionOrLanguage(group)
+    }
+
+    /// For example "CTR-P-BMAP" for 3DS or "KTR-..." for New 3DS.
+    private func isProductCode(_ group: String) -> Bool {
         let upper = group.uppercased()
-        // Product code, e.g. "CTR-P-BMAP" for 3DS or "KTR-..." for New 3DS.
-        if upper.hasPrefix("CTR-") || upper.hasPrefix("KTR-") { return true }
-        // Version, e.g. "v0.1.0".
-        if upper.hasPrefix("V"), group.count > 1,
-            group.dropFirst().allSatisfy({ $0.isNumber || $0 == "." })
-        {
-            return true
-        }
-        // Region or language, e.g. "E", "W", "USA", "JPN".
-        if !upper.isEmpty, upper.count <= 3, upper.allSatisfy(\.isLetter) {
-            return true
-        }
-        return false
+        return upper.hasPrefix("CTR-") || upper.hasPrefix("KTR-")
+    }
+
+    /// For example "v0.1.0".
+    private func isVersion(_ group: String) -> Bool {
+        group.uppercased().hasPrefix("V") && group.count > 1
+            && group.dropFirst().allSatisfy { $0.isNumber || $0 == "." }
+    }
+
+    /// For example "E", "W", "USA" or "JPN".
+    private func isRegionOrLanguage(_ group: String) -> Bool {
+        let upper = group.uppercased()
+        return !upper.isEmpty && upper.count <= 3
+            && upper.allSatisfy(\.isLetter)
     }
 }

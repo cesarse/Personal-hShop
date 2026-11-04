@@ -6,10 +6,10 @@ struct Application: App {
     @StateObject private var server = Webserver.instance
     @StateObject private var viewModel = FolderAccessViewModel.instance
 
+    /// Uses a group rather than a single `Window`, which would quit the app
+    /// when closed, cutting off a console still downloading. The Dock icon
+    /// brings it back.
     var body: some Scene {
-        // A group rather than a single Window, which would quit the app when
-        // closed, cutting off a console still downloading. The Dock icon
-        // brings it back.
         WindowGroup {
             StartView()
         }

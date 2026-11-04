@@ -6,7 +6,8 @@ enum GameTitleCasing {
     /// `title` in title case, when it arrived in block capitals.
     ///
     /// A title carrying any lower-case letter is left exactly as it is: the
-    /// styling is deliberate there, and rewriting it would lose it.
+    /// styling is deliberate there, and rewriting it would lose it. Roman
+    /// numerals also stay in capitals, as `capitalized` turns "IV" into "Iv".
     static func titleCased(_ title: String) -> String {
         guard !title.contains(where: \.isLowercase) else { return title }
 
@@ -14,8 +15,6 @@ enum GameTitleCasing {
             title
             .split(separator: " ", omittingEmptySubsequences: false)
             .map { word in
-                // Roman numerals are the one thing `capitalized` gets badly
-                // wrong: "IV" comes back as "Iv".
                 isRomanNumeral(String(word))
                     ? String(word) : String(word).capitalized
             }

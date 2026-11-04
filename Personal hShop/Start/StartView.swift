@@ -11,11 +11,20 @@ struct StartView: View {
     private static let supportEmail = URL(string: "mailto:personalhshop@icloud.com")!
 
     /// Opens the App Store's review sheet for the app.
-    // TODO: Replace the placeholder with the app's Apple ID from App Store Connect.
+    ///
+    /// - ToDo: Replace the placeholder with the app's Apple ID from App Store
+    ///   Connect.
     private static let reviewURL = URL(string: "https://apps.apple.com/app/id0000000000?action=write-review")!
 
     /// Apple requires a link to the privacy policy inside the app.
     private static let privacyPolicyURL = URL(string: "https://github.com/cesarse/Personal-hShop/blob/main/PRIVACY.md")!
+
+    /// No fixed height: the window grows to fit the wrapped text.
+    private static let windowWidth: CGFloat = 320
+
+    /// A light tint over the window background, so it stays pale green in
+    /// Light Mode and turns into a dark green in Dark Mode.
+    private static let windowTint = Color.green.opacity(0.12)
 
     private var appName: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
@@ -31,6 +40,7 @@ struct StartView: View {
         server.isRunning ? "The server is running." : "The server is stopped."
     }
 
+    /// Long in some languages, so its text wraps instead of being truncated.
     private var serverInstruction: LocalizedStringKey {
         server.isRunning
             ? "Open the File menu and click Stop server."
@@ -52,7 +62,6 @@ struct StartView: View {
             }
             VStack(alignment: HorizontalAlignment.leading, spacing: 8) {
                 Text(serverStatus)
-                // Long in some languages: wraps instead of being truncated.
                 Text(serverInstruction).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer()
@@ -71,11 +80,8 @@ struct StartView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        // No fixed height: the window grows to fit the wrapped text.
-        .frame(width: 320)
-        // A light tint over the window background, so it stays pale green in
-        // Light Mode and turns into a dark green in Dark Mode.
-        .background(Color.green.opacity(0.12))
+        .frame(width: Self.windowWidth)
+        .background(Self.windowTint)
     }
 }
 

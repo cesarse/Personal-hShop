@@ -4,6 +4,7 @@ import Darwin
 /// included, which a handful of idle clients and a few downloads use up.
 enum FileDescriptorLimit {
 
+    /// Best effort: falling short only means the old limit stays.
     static func raise(to wanted: rlim_t) {
         var limit = rlimit()
         guard getrlimit(RLIMIT_NOFILE, &limit) == 0, limit.rlim_cur < wanted
@@ -11,7 +12,6 @@ enum FileDescriptorLimit {
             return
         }
         limit.rlim_cur = min(wanted, limit.rlim_max)
-        // Falling short only means the old limit stays.
         _ = setrlimit(RLIMIT_NOFILE, &limit)
     }
 }

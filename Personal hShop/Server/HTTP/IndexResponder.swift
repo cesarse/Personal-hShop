@@ -32,12 +32,12 @@ struct IndexResponder {
         }
     }
 
+    /// The 3DS resolves whatever the QR code contains over the network, so the
+    /// codes have to carry an absolute URL this Mac answers on. A relative path
+    /// or "localhost" would be useless to the console.
     private func render(_ request: Request) -> Response {
-        // The 3DS resolves whatever the QR code contains over the network, so
-        // the codes have to carry an absolute URL this Mac answers on. A
-        // relative path or "localhost" would be useless to the console.
-        // HTTP/1.1's Host header arrives as the request's authority.
-        let baseURL = address.baseURL(host: request.head.authority, port: port)
+        let hostHeader = request.head.authority
+        let baseURL = address.baseURL(host: hostHeader, port: port)
         let html = page.html(
             games: library.games(),
             baseURL: baseURL,

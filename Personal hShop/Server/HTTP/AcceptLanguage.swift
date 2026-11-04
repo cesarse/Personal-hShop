@@ -7,7 +7,8 @@ struct AcceptLanguage {
     let preferences: [String]
 
     /// Reads an `Accept-Language` header: a comma-separated list of tags,
-    /// each with an optional `q` weight that orders them.
+    /// each with an optional `q` weight that orders them. Tags of equal
+    /// weight keep the order they were written in.
     init(header: String?) {
         guard let header else {
             preferences = []
@@ -18,8 +19,6 @@ struct AcceptLanguage {
             .split(separator: ",")
             .compactMap(AcceptLanguage.entry)
             .enumerated()
-            // Equal weights keep the order they were written in, which the
-            // header's own order already expresses.
             .sorted {
                 $0.element.quality == $1.element.quality
                     ? $0.offset < $1.offset

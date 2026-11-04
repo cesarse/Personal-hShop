@@ -3,7 +3,9 @@ import Foundation
 /// Scans the content section for the "SMDH" magic anchor.
 ///
 /// ExeFS offsets shift between titles, so there is no fixed place to look:
-/// this walks the content section in chunks and searches each one.
+/// this walks the content section in chunks and searches each one. The tail
+/// of each chunk is searched again with the next, so a magic value split
+/// across a read boundary is still found.
 struct ContentScanSMDHLocator: SMDHLocating {
 
     /// Read the application data in 1MB chunks.
@@ -16,9 +18,7 @@ struct ContentScanSMDHLocator: SMDHLocating {
     {
         let start = header.contentOffset
         var currentOffset = start
-        // Tail of the previous chunk, re-examined with the next one so a
-        // magic value split across a read boundary is still found.
-        var carry = Data()
+        var previousChunkTail = Data()
 
         while true {
             let chunk = try reader.read(
@@ -27,14 +27,14 @@ struct ContentScanSMDHLocator: SMDHLocating {
             )
             if chunk.isEmpty { break }
 
-            let window = carry + chunk
+            let window = previousChunkTail + chunk
             if let range = window.range(of: SMDH.magic) {
-                return currentOffset - UInt64(carry.count)
+                return currentOffset - UInt64(previousChunkTail.count)
                     + UInt64(range.lowerBound)
             }
 
             currentOffset += UInt64(chunk.count)
-            carry = Data(window.suffix(SMDH.magic.count - 1))
+            previousChunkTail = Data(window.suffix(SMDH.magic.count - 1))
             if currentOffset - start > ContentScanSMDHLocator.scanLimit {
                 break
             }

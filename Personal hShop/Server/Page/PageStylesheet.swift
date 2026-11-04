@@ -1,4 +1,7 @@
 /// The index page's styling.
+///
+/// The white padding of `.qr` is the QR quiet zone; without it scanners
+/// struggle to find the symbol.
 enum PageStylesheet {
 
     static let css = """
@@ -28,8 +31,6 @@ enum PageStylesheet {
                 align-items: center;
                 gap: .75rem;
             }
-            /* White padding around the code is the QR quiet zone; without it
-               scanners struggle to find the symbol. */
             .qr {
                 background: #fff;
                 padding: 12px;

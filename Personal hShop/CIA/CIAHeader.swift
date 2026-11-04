@@ -9,6 +9,9 @@ struct CIAHeader {
 
     let contentSize: UInt64
     let metaSize: UInt32
+
+    /// Sections are laid out header, cert chain, ticket, TMD, content, meta,
+    /// each padded to 64 bytes. Only the first four precede the content.
     let contentOffset: UInt64
 
     /// Reads the size table and derives the offsets its sections sit at.
@@ -17,28 +20,24 @@ struct CIAHeader {
             throw ParserError.invalidHeader
         }
 
-        // Block sizes are UInt32, little endian.
-        let field = { (offset: Int) -> UInt32 in
+        let littleEndianUInt32 = { (offset: Int) -> UInt32 in
             data.withUnsafeBytes {
                 UInt32(
                     littleEndian: $0.loadUnaligned(
                         fromByteOffset: offset, as: UInt32.self))
             }
         }
-        let headerAllocSize = field(0x00)
-        let certChainSize = field(0x08)
-        let ticketSize = field(0x0C)
-        let tmdSize = field(0x10)
-        metaSize = field(0x14)
+        let headerAllocSize = littleEndianUInt32(0x00)
+        let certChainSize = littleEndianUInt32(0x08)
+        let ticketSize = littleEndianUInt32(0x0C)
+        let tmdSize = littleEndianUInt32(0x10)
+        metaSize = littleEndianUInt32(0x14)
         contentSize = data.withUnsafeBytes {
             UInt64(
                 littleEndian: $0.loadUnaligned(
                     fromByteOffset: 0x18, as: UInt64.self))
         }
 
-        // Sections are laid out header, cert chain, ticket, TMD, content,
-        // meta; each padded to 64 bytes. Meta is not included here: it
-        // trails the content rather than preceding it.
         contentOffset =
             CIAHeader.align64(UInt64(headerAllocSize))
             + CIAHeader.align64(UInt64(certChainSize))

@@ -12,8 +12,6 @@ struct IndexPage {
     /// The whole document. It is built from its arguments alone, so any
     /// number of requests can render it at the same time.
     func html(games: [Game], baseURL: String, pageText: PageText) -> String {
-        // Every code is rendered before the page is laid out, so the markup
-        // below is only about structure.
         let cards = games.map {
             GameCard(game: $0, baseURL: baseURL, qrCode: qrCode)
         }
@@ -41,6 +39,8 @@ struct IndexPage {
             + "</body>"
     }
 
+    /// "Remote Install" and "Scan QR Code" are FBI's own menu labels and FBI
+    /// has no localisations, so they stay in English everywhere.
     private static func hint(
         cards: [GameCard],
         baseURL: String,
@@ -49,8 +49,6 @@ struct IndexPage {
         guard !cards.isEmpty else {
             return pageText.localized("No .cia files found")
         }
-        // "Remote Install" and "Scan QR Code" are FBI's own menu labels and
-        // FBI has no localisations, so they stay in English everywhere.
         return pageText.localized(
             """
             In FBI, choose Remote Install → Scan QR Code, then point the 3DS \
