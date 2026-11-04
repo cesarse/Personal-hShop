@@ -41,49 +41,61 @@ struct ServerAddress {
         return !isLoopback
     }
 
-    /// First usable IPv4 address of an up, non-loopback interface, preferring
-    /// en0: it is Wi-Fi or the built-in Ethernet on every Mac, so it is the
-    /// interface the 3DS is most likely to share a network with.
+    private typealias InterfaceAddress = (interface: String, address: String)
+
     private static func lanAddress() -> String? {
-        var head: UnsafeMutablePointer<ifaddrs>?
-        guard getifaddrs(&head) == 0, let first = head else { return nil }
-        defer { freeifaddrs(head) }
+        preferredAddress(among: usableIPv4Addresses())
+    }
 
-        var candidates: [(interface: String, address: String)] = []
-        for pointer in sequence(first: first, next: { $0.pointee.ifa_next }) {
-            let flags = Int32(pointer.pointee.ifa_flags)
-            guard flags & IFF_UP != 0, flags & IFF_LOOPBACK == 0,
-                let address = pointer.pointee.ifa_addr,
-                address.pointee.sa_family == UInt8(AF_INET)
-            else {
-                continue
-            }
-
-            var host = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-            guard
-                getnameinfo(
-                    address,
-                    socklen_t(address.pointee.sa_len),
-                    &host,
-                    socklen_t(host.count),
-                    nil,
-                    0,
-                    NI_NUMERICHOST
-                ) == 0
-            else {
-                continue
-            }
-
-            candidates.append(
-                (
-                    String(cString: pointer.pointee.ifa_name),
-                    String(cString: host)
-                )
-            )
-        }
-
-        return candidates.first { $0.interface == "en0" }?.address
+    /// Prefers en0, then any other en interface: en0 is Wi-Fi or the built-in
+    /// Ethernet on every Mac, so it is the interface the 3DS is most likely to
+    /// share a network with.
+    private static func preferredAddress(
+        among candidates: [InterfaceAddress]
+    ) -> String? {
+        candidates.first { $0.interface == "en0" }?.address
             ?? candidates.first { $0.interface.hasPrefix("en") }?.address
             ?? candidates.first?.address
+    }
+
+    private static func usableIPv4Addresses() -> [InterfaceAddress] {
+        var head: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&head) == 0, let first = head else { return [] }
+        defer { freeifaddrs(head) }
+
+        return sequence(first: first) { $0.pointee.ifa_next }
+            .compactMap { usableIPv4Address(of: $0.pointee) }
+    }
+
+    /// The address of an interface entry, when the interface is up, is not
+    /// loopback and the entry holds an IPv4 address.
+    private static func usableIPv4Address(
+        of entry: ifaddrs
+    ) -> InterfaceAddress? {
+        let flags = Int32(entry.ifa_flags)
+        guard flags & IFF_UP != 0, flags & IFF_LOOPBACK == 0,
+            let address = entry.ifa_addr,
+            address.pointee.sa_family == UInt8(AF_INET),
+            let host = numericHost(of: address)
+        else {
+            return nil
+        }
+        return (String(cString: entry.ifa_name), host)
+    }
+
+    private static func numericHost(
+        of address: UnsafeMutablePointer<sockaddr>
+    ) -> String? {
+        var host = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+        let status = getnameinfo(
+            address,
+            socklen_t(address.pointee.sa_len),
+            &host,
+            socklen_t(host.count),
+            nil,
+            0,
+            NI_NUMERICHOST
+        )
+        return status == 0 ? String(cString: host) : nil
     }
 }
