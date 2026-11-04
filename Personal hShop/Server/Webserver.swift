@@ -44,25 +44,59 @@ final class Webserver: ObservableObject {
     /// Being stopped while starting is not an error, so that returns normally.
     func start() async throws {
         if serving != nil { return }
-        guard let listeningPort = ServerPort(port) else {
+        let portNumber = try validatedPortNumber()
+        generation += 1
+        let run = generation
+        let listening = ListeningSignal()
+        serving = launch(
+            makeApplication(port: portNumber, listening: listening),
+            run: run,
+            listening: listening
+        )
+
+        do {
+            try await listening.wait()
+        } catch {
+            guard run == generation else { return }
+            serving = nil
+            throw ServerStartError(error, port: portNumber)
+        }
+        guard run == generation else { return }
+        isRunning = true
+        openPageIfEnabled(port: portNumber)
+    }
+
+    private func validatedPortNumber() throws -> Int {
+        guard let validPort = ServerPort(port) else {
             throw ServerPortError.outOfRange
         }
-        generation += 1
-        let current = generation
-        let portNumber = Int(listeningPort.number)
-        let listening = ListeningSignal()
-        let application = Hummingbird.Application(
-            router: makeRouter(port: portNumber),
+        return Int(validPort.number)
+    }
+
+    private func makeApplication(
+        port: Int,
+        listening: ListeningSignal
+    ) -> some ApplicationProtocol {
+        Hummingbird.Application(
+            router: makeRouter(port: port),
             server: .http1(configuration: .init(idleTimeout: Self.idleTimeout)),
             configuration: ApplicationConfiguration(
-                address: .hostname("0.0.0.0", port: portNumber),
+                address: .hostname("0.0.0.0", port: port),
                 serverName: nil
             ),
             onServerRunning: { _ in listening.resolve(.success(())) }
         )
+    }
 
+    /// Runs `application` once any previous server has let go of the port, and
+    /// reports through `listening` if it ends before it started listening.
+    private func launch(
+        _ application: some ApplicationProtocol,
+        run: Int,
+        listening: ListeningSignal
+    ) -> Task<Void, Never> {
         let previous = stopping
-        serving = Task {
+        return Task {
             await previous?.value
             do {
                 try await application.run()
@@ -71,20 +105,12 @@ final class Webserver: ObservableObject {
             } catch {
                 listening.resolve(.failure(error))
             }
-            self.servingEnded(current)
+            self.servingEnded(run)
         }
+    }
 
-        do {
-            try await listening.wait()
-        } catch {
-            guard generation == current else { return }
-            serving = nil
-            throw ServerStartError(error, port: portNumber)
-        }
-        guard generation == current else { return }
-        isRunning = true
-
-        if openPage, let url = URL(string: "http://localhost:\(portNumber)") {
+    private func openPageIfEnabled(port: Int) {
+        if openPage, let url = URL(string: "http://localhost:\(port)") {
             NSWorkspace.shared.open(url)
         }
     }
