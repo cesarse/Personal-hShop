@@ -79,7 +79,7 @@ final class Webserver: ObservableObject {
     ) -> some ApplicationProtocol {
         Hummingbird.Application(
             router: makeRouter(port: port),
-            server: .http1(configuration: .init(idleTimeout: Self.idleTimeout)),
+            server: .selfClosingHTTP1(idleTimeout: Self.idleTimeout),
             configuration: ApplicationConfiguration(
                 address: .hostname("0.0.0.0", port: port),
                 serverName: nil

@@ -10,6 +10,8 @@
 		FE8C6710305EB69900CE2616 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FE8C670F305EB69900CE2616 /* AppIcon.icon */; };
 		FEB00B1E2FE0000000000001 /* Hummingbird in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000011 /* Hummingbird */; };
 		FEB00B1E2FE0000000000002 /* NIOCore in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000012 /* NIOCore */; };
+		FEB00B1E2FE0000000000003 /* HummingbirdCore in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000013 /* HummingbirdCore */; };
+		FEB00B1E2FE0000000000004 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = FEB00B1E2FE0000000000014 /* Logging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 			files = (
 				FEB00B1E2FE0000000000001 /* Hummingbird in Frameworks */,
 				FEB00B1E2FE0000000000002 /* NIOCore in Frameworks */,
+				FEB00B1E2FE0000000000003 /* HummingbirdCore in Frameworks */,
+				FEB00B1E2FE0000000000004 /* Logging in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -117,6 +121,8 @@
 			packageProductDependencies = (
 				FEB00B1E2FE0000000000011 /* Hummingbird */,
 				FEB00B1E2FE0000000000012 /* NIOCore */,
+				FEB00B1E2FE0000000000013 /* HummingbirdCore */,
+				FEB00B1E2FE0000000000014 /* Logging */,
 			);
 			productName = "Personal hShop";
 			productReference = FE608F152BD9784F0056B110 /* Personal hShop.app */;
@@ -157,6 +163,7 @@
 			packageReferences = (
 				FEB00B1E2FE0000000000021 /* XCRemoteSwiftPackageReference "hummingbird" */,
 				FEB00B1E2FE0000000000022 /* XCRemoteSwiftPackageReference "swift-nio" */,
+				FEB00B1E2FE0000000000023 /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			preferredProjectObjectVersion = 110;
 			productRefGroup = FE608F162BD9784F0056B110 /* Products */;
@@ -508,6 +515,14 @@
 				minimumVersion = 2.104.0;
 			};
 		};
+		FEB00B1E2FE0000000000023 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.16.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -520,6 +535,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FEB00B1E2FE0000000000022 /* XCRemoteSwiftPackageReference "swift-nio" */;
 			productName = NIOCore;
+		};
+		FEB00B1E2FE0000000000013 /* HummingbirdCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEB00B1E2FE0000000000021 /* XCRemoteSwiftPackageReference "hummingbird" */;
+			productName = HummingbirdCore;
+		};
+		FEB00B1E2FE0000000000014 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FEB00B1E2FE0000000000023 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
