@@ -8,10 +8,13 @@ struct Application: App {
 
     /// Uses a group rather than a single `Window`, which would quit the app
     /// when closed, cutting off a console still downloading. The Dock icon
-    /// brings it back.
+    /// and the Help menu bring it back, and its single value keeps it to one
+    /// window.
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: StartWindow.id, for: StartWindow.self) { _ in
             StartView()
+        } defaultValue: {
+            StartWindow.shared
         }
         .windowResizability(.contentSize)
         Settings {
@@ -35,6 +38,9 @@ struct Application: App {
             }
             CommandGroup(replacing: CommandGroupPlacement.appVisibility) {}
             CommandGroup(replacing: CommandGroupPlacement.systemServices) {}
+            CommandGroup(replacing: CommandGroupPlacement.help) {
+                HelpButton()
+            }
         }
     }
 }

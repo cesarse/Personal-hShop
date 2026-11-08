@@ -1,11 +1,15 @@
 import SwiftUI
 
-/// The window shown at launch: the app's icon, name and version, what the
-/// server is doing, and links to contact the developer, review the app and
-/// read the privacy policy.
+/// The window shown at launch and from the Help menu: the app's icon, name and
+/// version, what the server is doing, and links to the support page, contact
+/// the developer, review the app and read the privacy policy.
 struct StartView: View {
 
     @StateObject private var server = Webserver.instance
+
+    /// Getting started and troubleshooting, the guide the window itself is too
+    /// short to hold.
+    private static let supportPageURL = URL(string: "https://github.com/cesarse/Personal-hShop/blob/main/SUPPORT.md")!
 
     /// The address users write to, the same one on the support page.
     private static let supportEmail = URL(string: "mailto:personalhshop@icloud.com")!
@@ -64,6 +68,10 @@ struct StartView: View {
                 Text(serverStatus)
                 Text(serverInstruction).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                    .frame(height: 1)
+                Text("Need help?")
+                Link("Support page", destination: Self.supportPageURL)
                 Spacer()
                     .frame(height: 1)
                 Text("Suggestions, problems?")
