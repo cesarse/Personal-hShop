@@ -1,8 +1,12 @@
 # Privacy Policy
 
-_Last updated: 25 October 2026_
+**English** · [Deutsch](PRIVACY-de.md) · [Español](PRIVACY-es.md) · [Français](PRIVACY-fr.md) · [Italiano](PRIVACY-it.md) · [Português (Brasil)](PRIVACY-pt-BR.md)
 
-Personal hShop is a Mac app made by César Seragiotto. It collects no personal data.
+_Translations of this policy are provided for convenience. If a translation differs from this English version, the English version applies._
+
+_Last updated: 9 November 2026_
+
+Personal hShop is a Mac app. It collects no personal data.
 
 ## What the app does not do
 
@@ -50,4 +54,4 @@ If this policy changes, the new version will be published here with a new date.
 
 ## Contact
 
-For any question about this policy, email César Seragiotto at [personalhshop@icloud.com](mailto:personalhshop@icloud.com). See also [Support](SUPPORT.md).
+For any question about this policy, email [personalhshop@icloud.com](mailto:personalhshop@icloud.com). See also [Support](SUPPORT.md).

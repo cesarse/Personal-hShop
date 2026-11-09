@@ -1,5 +1,9 @@
 # Personal hShop Support
 
+**English** · [Deutsch](SUPPORT-de.md) · [Español](SUPPORT-es.md) · [Français](SUPPORT-fr.md) · [Italiano](SUPPORT-it.md) · [Português (Brasil)](SUPPORT-pt-BR.md)
+
+_Translations of this page are provided for convenience. If a translation differs from this English version, the English version applies._
+
 ## Contact
 
 Email: [personalhshop@icloud.com](mailto:personalhshop@icloud.com)
