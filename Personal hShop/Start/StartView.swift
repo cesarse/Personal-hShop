@@ -7,10 +7,6 @@ struct StartView: View {
 
     @StateObject private var server = Webserver.instance
 
-    /// Getting started and troubleshooting, the guide the window itself is too
-    /// short to hold.
-    private static let supportPageURL = URL(string: "https://github.com/cesarse/Personal-hShop/blob/main/SUPPORT.md")!
-
     /// The address users write to, the same one on the support page.
     private static let supportEmail = URL(string: "mailto:personalhshop@icloud.com")!
 
@@ -19,9 +15,6 @@ struct StartView: View {
     /// - ToDo: Replace the placeholder with the app's Apple ID from App Store
     ///   Connect.
     private static let reviewURL = URL(string: "https://apps.apple.com/app/id0000000000?action=write-review")!
-
-    /// Apple requires a link to the privacy policy inside the app.
-    private static let privacyPolicyURL = URL(string: "https://github.com/cesarse/Personal-hShop/blob/main/PRIVACY.md")!
 
     /// No fixed height: the window grows to fit the wrapped text.
     private static let windowWidth: CGFloat = 320
@@ -71,7 +64,7 @@ struct StartView: View {
                 Spacer()
                     .frame(height: 1)
                 Text("Need help?")
-                Link("Support page", destination: Self.supportPageURL)
+                Link("Support page", destination: OnlineDocument.support.url)
                 Spacer()
                     .frame(height: 1)
                 Text("Suggestions, problems?")
@@ -83,7 +76,10 @@ struct StartView: View {
                 Spacer()
                     .frame(height: 1)
                 Text("What about your data?")
-                Link("Privacy Policy", destination: Self.privacyPolicyURL)
+                Link(
+                    "Privacy Policy",
+                    destination: OnlineDocument.privacyPolicy.url
+                )
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
